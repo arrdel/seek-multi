@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" width="700" height="500">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAFAFA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="plotArea" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FAFAFA;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shaded regions for convergence phases -->
+    <linearGradient id="initPhase" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFCDD2;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#FFCDD2;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="transPhase" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFF9C4;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#FFF9C4;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="convPhase" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#C8E6C9;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#C8E6C9;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="700" height="500" fill="url(#bgGradient)"/>
+  
+  <!-- Title -->
+  <text x="350" y="30" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">
+    Collaborative Belief Convergence Analysis
+  </text>
+  <text x="350" y="50" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">
+    Information Entropy and Cross-Agent Belief Divergence vs. Communication Rounds
+  </text>
+  
+  <!-- Main Plot Area -->
+  <g transform="translate(70, 75)">
+    <!-- Phase regions -->
+    <rect x="0" y="0" width="100" height="280" fill="url(#initPhase)"/>
+    <rect x="100" y="0" width="200" height="280" fill="url(#transPhase)"/>
+    <rect x="300" y="0" width="260" height="280" fill="url(#convPhase)"/>
+    
+    <!-- Plot background -->
+    <rect x="0" y="0" width="560" height="280" fill="none" stroke="#CCC" stroke-width="1"/>
+    
+    <!-- Grid lines - horizontal -->
+    <line x1="0" y1="56" x2="560" y2="56" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="0" y1="112" x2="560" y2="112" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="0" y1="168" x2="560" y2="168" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="0" y1="224" x2="560" y2="224" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    
+    <!-- Grid lines - vertical -->
+    <line x1="56" y1="0" x2="56" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="112" y1="0" x2="112" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="168" y1="0" x2="168" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="224" y1="0" x2="224" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="280" y1="0" x2="280" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="336" y1="0" x2="336" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="392" y1="0" x2="392" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="448" y1="0" x2="448" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    <line x1="504" y1="0" x2="504" y2="280" stroke="#E0E0E0" stroke-width="0.5" stroke-dasharray="3,3"/>
+    
+    <!-- Phase labels at top -->
+    <text x="50" y="-8" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#D32F2F" font-weight="bold">Initial</text>
+    <text x="200" y="-8" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#FBC02D" font-weight="bold">Transition</text>
+    <text x="430" y="-8" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#388E3C" font-weight="bold">Convergence</text>
+    
+    <!-- Phase boundaries -->
+    <line x1="100" y1="0" x2="100" y2="280" stroke="#E57373" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <line x1="300" y1="0" x2="300" y2="280" stroke="#81C784" stroke-width="1.5" stroke-dasharray="6,4"/>
+    
+    <!-- ===================== ENTROPY CURVES ===================== -->
+    
+    <!-- SEEK-Multi Team Entropy (main result) -->
+    <!-- Rapid convergence from 4.2 to ~0.3 -->
+    <path d="M 0 14 
+             C 28 14, 42 28, 56 56 
+             L 84 98 
+             C 98 126, 112 154, 140 182 
+             C 168 210, 196 231, 224 245 
+             C 252 252, 280 259, 308 263 
+             C 336 265, 364 266, 392 267 
+             L 420 268 L 448 268 L 476 268 L 504 268.5 L 532 268.5 L 560 268.5" 
+          fill="none" stroke="#1976D2" stroke-width="3"/>
+    
+    <!-- Confidence band for SEEK-Multi -->
+    <path d="M 0 7 C 28 7, 42 21, 56 42 L 84 84 C 98 112, 112 140, 140 168 C 168 196, 196 217, 224 231 C 252 238, 280 245, 308 249 C 336 251, 364 252, 392 253 L 420 254 L 448 254 L 476 254 L 504 254.5 L 532 254.5 L 560 254.5
+             L 560 282.5 L 532 282.5 L 504 282.5 L 476 282.5 L 448 282 L 420 282 L 392 281 C 364 280, 336 279, 308 277 C 280 273, 252 266, 224 259 C 196 245, 168 224, 140 196 C 112 168, 98 140, 84 112 L 56 70 C 42 35, 28 21, 0 21 Z" 
+          fill="#1976D2" fill-opacity="0.15"/>
+    
+    <!-- Independent Agents entropy (no communication) -->
+    <path d="M 0 14 
+             C 56 14, 84 28, 112 42 
+             L 168 84 
+             C 196 98, 224 112, 252 126 
+             C 280 140, 308 147, 336 154 
+             C 364 161, 392 168, 420 175 
+             C 448 175, 476 175, 504 175 L 560 175" 
+          fill="none" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="6,3"/>
+    
+    <!-- Pairwise Communication Only -->
+    <path d="M 0 14 
+             C 28 14, 56 28, 84 56 
+             L 112 84 
+             C 140 112, 168 140, 196 168 
+             C 224 189, 252 203, 280 217 
+             C 308 224, 336 231, 364 238 
+             C 392 241, 420 244, 448 245 
+             L 476 246 L 504 246.5 L 532 247 L 560 247" 
+          fill="none" stroke="#FF9800" stroke-width="2"/>
+    
+    <!-- ===================== BELIEF DIVERGENCE (Secondary Axis) ===================== -->
+    
+    <!-- KL Divergence between agent beliefs (SEEK-Multi) -->
+    <!-- Starts at 2.5, drops to near 0 -->
+    <path d="M 0 168 
+             C 28 196, 56 210, 84 231 
+             C 112 245, 140 256, 168 263 
+             C 196 267, 224 270, 252 272 
+             C 280 274, 308 275, 336 276 
+             L 392 277 L 448 277.5 L 504 278 L 560 278" 
+          fill="none" stroke="#7B1FA2" stroke-width="2.5" stroke-dasharray="4,2"/>
+    
+    <!-- ===================== DATA POINTS ===================== -->
+    
+    <!-- SEEK-Multi markers (every 2 rounds) -->
+    <circle cx="0" cy="14" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="56" cy="56" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="112" cy="140" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="168" cy="196" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="224" cy="245" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="280" cy="259" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="336" cy="265" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="392" cy="267" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="448" cy="268" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <circle cx="504" cy="268.5" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    
+    <!-- Pairwise markers (triangles) -->
+    <polygon points="0,9 5,19 -5,19" fill="#FF9800" stroke="#FFF" stroke-width="1"/>
+    <polygon points="112,79 117,89 107,89" fill="#FF9800" stroke="#FFF" stroke-width="1"/>
+    <polygon points="224,184 229,194 219,194" fill="#FF9800" stroke="#FFF" stroke-width="1"/>
+    <polygon points="336,229 341,239 331,239" fill="#FF9800" stroke="#FFF" stroke-width="1"/>
+    <polygon points="448,243 453,253 443,253" fill="#FF9800" stroke="#FFF" stroke-width="1"/>
+    
+    <!-- Independent markers (squares) -->
+    <rect x="-4" y="10" width="8" height="8" fill="#9E9E9E" stroke="#FFF" stroke-width="1"/>
+    <rect x="164" y="80" width="8" height="8" fill="#9E9E9E" stroke="#FFF" stroke-width="1"/>
+    <rect x="276" y="136" width="8" height="8" fill="#9E9E9E" stroke="#FFF" stroke-width="1"/>
+    <rect x="388" y="164" width="8" height="8" fill="#9E9E9E" stroke="#FFF" stroke-width="1"/>
+    <rect x="500" y="171" width="8" height="8" fill="#9E9E9E" stroke="#FFF" stroke-width="1"/>
+    
+    <!-- KL Divergence markers (diamonds) -->
+    <rect x="-4" y="164" width="8" height="8" fill="#7B1FA2" stroke="#FFF" stroke-width="1" transform="rotate(45, 0, 168)"/>
+    <rect x="80" y="227" width="8" height="8" fill="#7B1FA2" stroke="#FFF" stroke-width="1" transform="rotate(45, 84, 231)"/>
+    <rect x="164" y="259" width="8" height="8" fill="#7B1FA2" stroke="#FFF" stroke-width="1" transform="rotate(45, 168, 263)"/>
+    <rect x="276" y="270" width="8" height="8" fill="#7B1FA2" stroke="#FFF" stroke-width="1" transform="rotate(45, 280, 274)"/>
+    <rect x="444" y="273.5" width="8" height="8" fill="#7B1FA2" stroke="#FFF" stroke-width="1" transform="rotate(45, 448, 277.5)"/>
+    
+    <!-- ===================== ANNOTATIONS ===================== -->
+    
+    <!-- Convergence arrow annotation -->
+    <path d="M 360 200 L 360 260" fill="none" stroke="#388E3C" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+    <defs>
+      <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#388E3C"/>
+      </marker>
+    </defs>
+    <text x="375" y="230" font-family="Arial, sans-serif" font-size="9" fill="#388E3C" font-weight="bold">95% Converged</text>
+    
+    <!-- Entropy reduction callout -->
+    <rect x="410" y="28" width="140" height="50" fill="#E3F2FD" stroke="#1976D2" rx="5" opacity="0.9"/>
+    <text x="480" y="45" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#1976D2" font-weight="bold">SEEK-Multi:</text>
+    <text x="480" y="58" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#1976D2">93% entropy reduction</text>
+    <text x="480" y="71" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#1976D2">in 8 rounds</text>
+    
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="280" stroke="#333" stroke-width="2"/>
+    <line x1="0" y1="280" x2="560" y2="280" stroke="#333" stroke-width="2"/>
+    <line x1="560" y1="0" x2="560" y2="280" stroke="#7B1FA2" stroke-width="2"/>
+    
+    <!-- X-axis labels -->
+    <text x="0" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">0</text>
+    <text x="56" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">2</text>
+    <text x="112" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">4</text>
+    <text x="168" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">6</text>
+    <text x="224" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">8</text>
+    <text x="280" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">10</text>
+    <text x="336" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">12</text>
+    <text x="392" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">14</text>
+    <text x="448" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">16</text>
+    <text x="504" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">18</text>
+    <text x="560" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">20</text>
+    
+    <!-- X-axis title -->
+    <text x="280" y="320" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">
+      Communication Rounds
+    </text>
+    
+    <!-- Left Y-axis labels (Entropy) -->
+    <text x="-10" y="283" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">0.0</text>
+    <text x="-10" y="227" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">1.0</text>
+    <text x="-10" y="171" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">2.0</text>
+    <text x="-10" y="115" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">3.0</text>
+    <text x="-10" y="59" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">4.0</text>
+    <text x="-10" y="3" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">5.0</text>
+    
+    <!-- Left Y-axis title -->
+    <text x="-45" y="140" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2" transform="rotate(-90, -45, 140)">
+      Belief Entropy (bits)
+    </text>
+    
+    <!-- Right Y-axis labels (KL Divergence) -->
+    <text x="575" y="283" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">0.0</text>
+    <text x="575" y="227" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">0.5</text>
+    <text x="575" y="171" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">1.0</text>
+    <text x="575" y="115" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">1.5</text>
+    <text x="575" y="59" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">2.0</text>
+    <text x="575" y="3" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#7B1FA2">2.5</text>
+    
+    <!-- Right Y-axis title -->
+    <text x="610" y="140" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#7B1FA2" transform="rotate(90, 610, 140)">
+      Avg. KL Divergence
+    </text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(70, 420)">
+    <rect x="0" y="0" width="560" height="65" fill="#FFF" stroke="#DDD" rx="5"/>
+    
+    <!-- Row 1 -->
+    <!-- SEEK-Multi Entropy -->
+    <line x1="15" y1="18" x2="50" y2="18" stroke="#1976D2" stroke-width="3"/>
+    <circle cx="32" cy="18" r="4" fill="#1976D2" stroke="#FFF" stroke-width="1"/>
+    <text x="60" y="22" font-family="Arial, sans-serif" font-size="10" fill="#333">SEEK-Multi (Team Entropy)</text>
+    
+    <!-- Pairwise -->
+    <line x1="215" y1="18" x2="250" y2="18" stroke="#FF9800" stroke-width="2"/>
+    <polygon points="232,13 237,23 227,23" fill="#FF9800"/>
+    <text x="260" y="22" font-family="Arial, sans-serif" font-size="10" fill="#333">Pairwise Communication</text>
+    
+    <!-- Independent -->
+    <line x1="410" y1="18" x2="445" y2="18" stroke="#9E9E9E" stroke-width="2" stroke-dasharray="6,3"/>
+    <rect x="424" y="14" width="6" height="6" fill="#9E9E9E"/>
+    <text x="455" y="22" font-family="Arial, sans-serif" font-size="10" fill="#333">Independent Agents</text>
+    
+    <!-- Row 2 -->
+    <!-- KL Divergence -->
+    <line x1="15" y1="45" x2="50" y2="45" stroke="#7B1FA2" stroke-width="2.5" stroke-dasharray="4,2"/>
+    <rect x="28" y="41" width="6" height="6" fill="#7B1FA2" transform="rotate(45, 31, 44)"/>
+    <text x="60" y="49" font-family="Arial, sans-serif" font-size="10" fill="#333">Cross-Agent KL Divergence</text>
+    
+    <!-- Confidence band -->
+    <rect x="220" y="38" width="30" height="14" fill="#1976D2" fill-opacity="0.15" stroke="#1976D2" stroke-width="1"/>
+    <text x="260" y="49" font-family="Arial, sans-serif" font-size="10" fill="#333">95% Confidence Interval</text>
+    
+    <!-- N agents note -->
+    <text x="430" y="49" font-family="Arial, sans-serif" font-size="9" fill="#666" font-style="italic">N = 4 agents, 50 trials</text>
+  </g>
+</svg>

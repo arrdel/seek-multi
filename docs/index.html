@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!-- Meta tags for social media banners -->
+    <meta name="description"
+        content="SEEK-Multi: Collaborative Multi-Agent Semantic Reasoning for Object Goal Navigation in Inspection Tasks. A comprehensive framework for distributed multi-robot coordination using semantic understanding.">
+    <meta property="og:title" content="SEEK-Multi: Collaborative Multi-Agent Semantic Navigation" />
+    <meta property="og:description"
+        content="A comprehensive framework for collaborative multi-agent object-goal navigation using distributed semantic reasoning, belief fusion, and coordinated task allocation." />
+    <meta property="og:url" content="https://github.com/seek-multi" />
+    <meta property="og:image" content="static/images/seek_multi_overview.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:title" content="SEEK-Multi: Collaborative Multi-Agent Semantic Navigation">
+    <meta name="twitter:description"
+        content="Distributed multi-robot coordination framework using semantic reasoning for object-goal navigation in inspection tasks.">
+    <meta name="twitter:image" content="static/images/seek_multi_overview.svg">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="keywords"
+        content="multi-robot, multi-agent, semantic navigation, object-goal navigation, inspection, coordination, distributed systems, belief fusion, task allocation, scene graphs, robotics, autonomous systems">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SEEK-Multi | Collaborative Multi-Agent Semantic Navigation</title>
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro|Roboto+Mono" rel="stylesheet">
+
+    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+    <script defer src="static/js/fontawesome.all.min.js"></script>
+    <script src="static/js/bulma-carousel.min.js"></script>
+    <script src="static/js/bulma-slider.min.js"></script>
+    <script src="static/js/index.js"></script>
+
+    <!-- MathJax for rendering LaTeX equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Custom styles for enhanced presentation -->
+    <style>
+        :root {
+            --primary-color: #1976D2;
+            --primary-dark: #1565C0;
+            --primary-light: #42A5F5;
+            --secondary-color: #388E3C;
+            --accent-color: #E64A19;
+            --purple-color: #7B1FA2;
+            --teal-color: #00796B;
+            --gradient-primary: linear-gradient(135deg, #1976D2 0%, #42A5F5 100%);
+            --gradient-secondary: linear-gradient(135deg, #388E3C 0%, #66BB6A 100%);
+            --gradient-accent: linear-gradient(135deg, #E64A19 0%, #FF7043 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        .hero.is-primary {
+            background: #ffffff;
+        }
+
+        .publication-title {
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 700;
+            color: #1976D2;
+            font-size: 3.5rem;
+        }
+
+        .hero-body {
+            padding: 4rem 1.5rem;
+        }
+
+        .author-block a {
+            color: #1976D2;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* .author-block a:hover {
+            border-bottom-color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        } */
+
+        .publication-links .button {
+            margin: 0.25rem;
+            border-radius: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #1976D2 !important;
+            color: #ffffff !important;
+            border: 2px solid #1976D2 !important;
+        }
+
+        .publication-links .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            background-color: #1565C0 !important;
+            border-color: #1565C0 !important;
+        }
+
+        .section {
+            padding: 4rem 1.5rem;
+        }
+
+        .section.hero.is-light {
+            background: linear-gradient(180deg, #f5f7fa 0%, #fff 100%);
+        }
+
+        .title.is-3 {
+            font-family: 'Google Sans', sans-serif;
+            color: var(--primary-dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .title.is-3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .has-text-centered .title.is-3::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .title.is-4 {
+            font-family: 'Google Sans', sans-serif;
+            color: #333;
+            margin-top: 2rem;
+        }
+
+        .title.is-5 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        figure.image {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        figure.image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        figure.image img {
+            border-radius: 12px;
+        }
+
+        .image-caption {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        code {
+            background-color: #f0f4f8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--primary-dark);
+        }
+
+        .equation-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .table th {
+            font-weight: 600;
+            background: var(--gradient-primary) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .table td {
+            border-color: #e8ecef !important;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fbff;
+        }
+
+        .content ul {
+            line-height: 1.9;
+        }
+
+        .content ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .content a:hover {
+            border-bottom-color: var(--primary-color);
+        }
+
+        .feature-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid #e8ecef;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-light);
+        }
+
+        .feature-card .icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card .icon-wrapper.blue {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: var(--primary-color);
+        }
+
+        .feature-card .icon-wrapper.green {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: var(--secondary-color);
+        }
+
+        .feature-card .icon-wrapper.orange {
+            background: linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%);
+            color: var(--accent-color);
+        }
+
+        .feature-card .icon-wrapper.purple {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            color: var(--purple-color);
+        }
+
+        .feature-card .icon-wrapper.teal {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            color: var(--teal-color);
+        }
+
+        .feature-card h4 {
+            font-family: 'Google Sans', sans-serif;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .metric-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e8ecef;
+        }
+
+        .metric-box .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-box .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .algorithm-box {
+            background: #1e2a3a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: #e8ecef;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .algorithm-box .keyword {
+            color: #7dd3fc;
+        }
+
+        .algorithm-box .function {
+            color: #fbbf24;
+        }
+
+        .algorithm-box .comment {
+            color: #6b7280;
+        }
+
+        .algorithm-box .string {
+            color: #86efac;
+        }
+
+        .teaser-section {
+            background: var(--hero-light);
+            padding: 3rem 1.5rem;
+        }
+
+        .teaser-section figure {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .highlight-box.green {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left-color: var(--secondary-color);
+        }
+
+        .highlight-box.orange {
+            background: linear-gradient(135deg, #fbe9e7 0%, #ffccbc 100%);
+            border-left-color: var(--accent-color);
+        }
+
+        .nav-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-pills a {
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            background: #f0f4f8;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills a:hover,
+        .nav-pills a.active {
+            background: var(--gradient-primary);
+            color: #fff;
+        }
+
+        footer.footer {
+            background: linear-gradient(180deg, #f5f7fa 0%, #e8ecef 100%);
+            padding: 3rem 1.5rem;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .publication-title {
+                font-size: 1.75rem !important;
+            }
+
+            .columns.is-multiline .column {
+                padding: 0.5rem;
+            }
+
+            .metric-box .metric-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero is-primary is-medium">
+        <div class="hero-body">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered">
+                    <div class="column has-text-centered">
+                        <h1 class="title is-1 publication-title" style="color: #1976D2;">
+                            SEEK-Multi
+                        </h1>
+                        <h2 class="subtitle is-4" style="color: #333333; margin-top: 0.5rem;">
+                            Collaborative Multi-Agent Semantic Reasoning for<br>Object Goal Navigation in Inspection
+                            Tasks
+                        </h2>
+
+                        <div class="is-size-5 publication-authors" style="margin-top: 2rem;">
+                            <span class="author-block">
+                                <a href="https://github.com/arrdel" target="_blank">Adele Chinda</a>
+                            </span>
+                        </div>
+
+                        <div class="column has-text-centered" style="margin-top: 1.5rem;">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="static/pdfs/seek-multi.pdf" class="button is-white is-outlined is-rounded">
+                                        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                                        <span>Paper</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="https://github.com/arrdel/seek-multi"
+                                        class="button is-white is-outlined is-rounded">
+                                        <span class="icon"><i class="fab fa-github"></i></span>
+                                        <span>Code</span>
+                                    </a>
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teaser Section -->
+    <section class="teaser-section">
+        <div class="container is-max-desktop">
+            <figure class="image animate-fade-in">
+                <img src="static/images/seek_multi_overview.svg"
+                    alt="SEEK-Multi Overview: Multiple robots collaboratively searching for objects in an indoor environment">
+            </figure>
+            <p class="has-text-centered" style="color: rgba(0, 0, 0, 0.9); margin-top: 1.5rem; font-size: 1.1rem;">
+                <strong style="color: #000000;">SEEK-Multi</strong> enables teams of robots to collaboratively search
+                for
+                and inspect target objects
+                through distributed semantic reasoning, belief sharing, and coordinated task allocation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="section" style="padding-top: 3rem; padding-bottom: 2rem; background: #fff;">
+        <div class="container is-max-desktop">
+            <div class="columns is-multiline is-centered">
+                <div class="column is-3">
+                    <div class="metric-box">
+                        <div class="metric-value">3.85×</div>
+                        <div class="metric-label">Speedup with 6 Agents</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="metric-box">
+                        <div class="metric-value">97%</div>
+                        <div class="metric-label">Success Rate</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="metric-box">
+                        <div class="metric-value">93%</div>
+                        <div class="metric-label">Belief Convergence</div>
+                    </div>
+                </div>
+                <div class="column is-3">
+                    <div class="metric-box">
+                        <div class="metric-value">8</div>
+                        <div class="metric-label">Comm. Rounds to Converge</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Abstract -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Abstract</h2>
+                    <div class="content has-text-justified" style="font-size: 1.05rem; line-height: 1.8;">
+                        <p>
+                            This paper addresses the fundamental challenge of <strong>collaborative multi-agent
+                                object-goal navigation</strong> for autonomous inspections in complex, real-world
+                            environments. While single-agent approaches to object-goal navigation have demonstrated
+                            considerable promise, scaling these methods to larger environments necessitates the
+                            coordination of multiple robots to achieve efficient coverage, faster task completion, and
+                            robust operation under uncertainty.
+                        </p>
+                        <p>
+                            We introduce <strong>SEEK-Multi</strong>, a comprehensive framework that extends
+                            semantic-guided object inspection to multi-robot systems through distributed belief sharing,
+                            collaborative planning, coordinated task allocation, and adaptive communication protocols.
+                            SEEK-Multi enables multiple agents to share semantic understanding and inspection findings
+                            through a <em>distributed Relational Semantic Network (RSN)</em> and a <em>shared Dynamic
+                                Scene Graph (DSG)</em>, maintaining consistency across the team while accommodating
+                            communication constraints.
+                        </p>
+                        <p>
+                            We propose novel algorithms for collaborative exploration that leverage semantic priors,
+                            belief fusion using consensus protocols with provable convergence guarantees, and
+                            conflict-free task allocation based on auction mechanisms. Our extensive simulation analyses
+                            demonstrate that SEEK-Multi achieves <strong>significant speedup over single-agent
+                                approaches</strong> while maintaining high success rates, with near-linear scaling
+                            efficiency for up to four agents and graceful degradation under communication failures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">Key Features</h2>
+
+            <div class="columns is-multiline" style="margin-top: 2rem;">
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper blue">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>Semantic Reasoning</h4>
+                        <p>Leverages Relational Semantic Networks to encode object-room relationships, enabling
+                            intelligent search prioritization based on semantic priors.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper green">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <h4>Distributed Belief Fusion</h4>
+                        <p>Consensus-based protocols ensure beliefs converge across the team while handling
+                            communication delays, losses, and correlated observations.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper orange">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h4>Shared Scene Graphs</h4>
+                        <p>Dynamic Scene Graphs maintain hierarchical environment representations with efficient
+                            incremental updates and conflict resolution.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper purple">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h4>Auction-Based Allocation</h4>
+                        <p>Market-based task allocation using semantic-aware bidding ensures efficient workload
+                            distribution and conflict-free assignments.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper teal">
+                            <i class="fas fa-broadcast-tower"></i>
+                        </div>
+                        <h4>Adaptive Communication</h4>
+                        <p>Priority-based message protocols balance information sharing with bandwidth constraints,
+                            supporting both centralized and decentralized modes.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card">
+                        <div class="icon-wrapper blue">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Robust Operation</h4>
+                        <p>Graceful degradation under communication failures, agent heterogeneity, and dynamic
+                            environmental changes ensures reliable performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">System Architecture</h2>
+
+                    <div class="content has-text-justified">
+                        <p>
+                            SEEK-Multi extends the single-agent SEEK architecture to multi-robot teams through three key
+                            components:
+                            <strong>distributed semantic representations</strong>, <strong>collaborative
+                                planning</strong>, and a
+                            <strong>communication protocol</strong> for belief sharing.
+                        </p>
+                    </div>
+
+                    <figure class="image" style="margin: 2rem 0;">
+                        <img src="static/images/architecture.png"
+                            alt="SEEK-Multi System Architecture showing distributed components across multiple agents">
+                    </figure>
+                    <p class="image-caption">
+                        <strong>Figure 1:</strong> SEEK-Multi architecture showing the internal structure of each agent,
+                        including the Local DSG,
+                        RSN Belief module, Task Allocator, Collaborative Planner, Communication Module, and Belief
+                        Fusion components.
+                        Agents communicate through a range-limited network to share beliefs and coordinate actions.
+                    </p>
+
+                    <div class="columns is-multiline" style="margin-top: 2.5rem;">
+                        <div class="column is-6">
+                            <div class="highlight-box">
+                                <h4 class="title is-5" style="margin-top: 0;"><i class="fas fa-sitemap"
+                                        style="margin-right: 0.5rem;"></i>Distributed Scene Graph</h4>
+                                <p>Each robot maintains a local copy of the Dynamic Scene Graph (DSG) with hierarchical
+                                    layers representing objects, places, rooms, and building structure. Incremental
+                                    updates are broadcast and merged using timestamp-based conflict resolution with
+                                    confidence weighting.</p>
+                            </div>
+                        </div>
+
+                        <div class="column is-6">
+                            <div class="highlight-box green">
+                                <h4 class="title is-5" style="margin-top: 0; color: var(--secondary-color);"><i
+                                        class="fas fa-network-wired" style="margin-right: 0.5rem;"></i>Relational
+                                    Semantic Network</h4>
+                                <p>The RSN encodes object-room relationships learned from training data. Each robot
+                                    maintains local beliefs over target location, initialized from semantic priors and
+                                    updated through Bayesian inference from observations and fused beliefs from
+                                    teammates.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="title is-4">Core Components</h3>
+
+                    <div class="content">
+                        <ul>
+                            <li><strong>Local DSG:</strong> Hierarchical representation of the environment (objects →
+                                places → rooms → building)</li>
+                            <li><strong>RSN Belief P<sub>i</sub>(y<sub>G</sub>):</strong> Probability distribution over
+                                target location based on semantic priors and observations</li>
+                            <li><strong>Task Allocator:</strong> Auction-based mechanism for conflict-free task
+                                assignment with load balancing</li>
+                            <li><strong>Collaborative Planner:</strong> Path planning with intention sharing and
+                                priority-based conflict resolution</li>
+                            <li><strong>Communication Module:</strong> Priority-queued message passing with bandwidth
+                                management</li>
+                            <li><strong>Belief Fusion:</strong> Weighted consensus protocol with confidence tracking and
+                                correlation handling</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methods -->
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Technical Approach</h2>
+
+                    <div class="content has-text-justified">
+
+                        <h3 class="title is-4">Semantic Prior Model</h3>
+                        <p>
+                            We leverage semantic priors about object-room relationships, captured in the Relational
+                            Semantic Network.
+                            The RSN encodes the conditional probability of finding an object class in a room type:
+                        </p>
+
+                        <div class="equation-box">
+                            <p>$$P(y^l \in \ell) = \text{RSN}(y^l, \ell)$$</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                For example, \(P(\text{fire extinguisher} \in \text{kitchen})\) captures the prior
+                                knowledge that fire extinguishers are commonly found in kitchens.
+                            </p>
+                        </div>
+
+                        <h3 class="title is-4">Distributed Belief Fusion</h3>
+                        <p>
+                            When robot \(r_i\) receives belief \(P_j(y_G)\) from robot \(r_j\) with confidence \(c_j\),
+                            it updates its belief using weighted averaging:
+                        </p>
+
+                        <div class="equation-box">
+                            <p>$$P_i^{\text{new}}(y_G \in v) = \frac{c_i \cdot P_i(y_G \in v) + c_j \cdot P_j(y_G \in
+                                v)}{c_i + c_j}$$</p>
+                        </div>
+
+                        <p>
+                            The confidence is updated based on the number and quality of observations:
+                        </p>
+
+                        <div class="equation-box">
+                            <p>$$c_i^{\text{new}} = \min\left(c_{\max}, \sqrt{c_i^2 + c_j^2} + \alpha \cdot
+                                |\text{obs}_i^{\text{new}}|\right)$$</p>
+                        </div>
+
+                        <h3 class="title is-4">Auction-Based Task Allocation</h3>
+                        <p>
+                            We use an auction-based allocation mechanism inspired by market-based multi-robot
+                            coordination.
+                            Each robot computes bids based on task priority, travel cost, and current workload:
+                        </p>
+
+                        <div class="equation-box">
+                            <p>$$\text{Bid}_i(v) = \frac{\text{Priority}(v)}{\text{Cost}_i(v) + \epsilon} \cdot
+                                \text{LoadFactor}_i$$</p>
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                where \(\text{Priority}(v) = P(y_G \in v) \cdot \text{Value}(v) \cdot (1 -
+                                \text{Searched}(v))\)
+                            </p>
+                        </div>
+
+                        <h3 class="title is-4">Algorithm Overview</h3>
+
+                        <div class="algorithm-box">
+                            <pre><span class="keyword">Algorithm</span> <span class="function">SEEK-Multi-Execute</span>(target_class, time_limit):
+    <span class="comment">// Initialize distributed representations</span>
+    <span class="keyword">for each</span> agent i <span class="keyword">in parallel</span>:
+        Initialize local_dsg[i], belief[i] from RSN priors
+        assigned_tasks[i] ← ∅
+    
+    <span class="keyword">while</span> not found and t < time_limit:
+        <span class="comment">// Phase 1: Sense and update</span>
+        observations ← <span class="function">SenseEnvironment</span>()
+        <span class="function">UpdateLocalDSG</span>(observations)
+        <span class="function">UpdateBelief</span>(observations)
+        
+        <span class="comment">// Phase 2: Communicate</span>
+        <span class="function">BroadcastUpdates</span>(dsg_delta, belief, intention)
+        received ← <span class="function">ReceiveMessages</span>()
+        <span class="function">FuseBeliefs</span>(received)
+        <span class="function">MergeDSG</span>(received)
+        
+        <span class="comment">// Phase 3: Plan and allocate</span>
+        tasks ← <span class="function">ComputeTaskPriorities</span>(belief)
+        assignment ← <span class="function">DistributedAuction</span>(tasks)
+        path ← <span class="function">PlanPath</span>(assignment, intentions)
+        
+        <span class="comment">// Phase 4: Execute</span>
+        <span class="function">ExecuteAction</span>(path.next_action)
+        
+    <span class="keyword">return</span> success, total_path_length</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="section hero is-light" id="results">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Experimental Results</h2>
+
+                    <div class="content has-text-justified">
+                        <p>
+                            We evaluate SEEK-Multi through extensive simulations across diverse environment
+                            configurations,
+                            analyzing scaling behavior, belief convergence, and communication requirements.
+                        </p>
+
+                        <h3 class="title is-4">Multi-Agent Scaling Performance</h3>
+                        <p>
+                            SEEK-Multi achieves near-linear speedup for up to 4 agents, with graceful diminishing
+                            returns as the team size increases.
+                            The system maintains high SPL (Success weighted by Path Length) across all configurations.
+                        </p>
+                    </div>
+
+                    <figure class="image" style="margin: 2rem 0;">
+                        <img src="static/images/scaling_results.svg"
+                            alt="Scaling results showing speedup and SPL vs number of agents">
+                    </figure>
+                    <p class="image-caption">
+                        <strong>Figure 2:</strong> Multi-agent scaling performance in medium building environment (100
+                        trials).
+                        SEEK-Multi achieves 3.85× speedup with 6 agents while maintaining 97% success rate.
+                        The near-linear scaling region extends to 4 agents before diminishing returns.
+                    </p>
+
+                    <div class="content has-text-justified" style="margin-top: 2rem;">
+                        <h3 class="title is-4">Belief Convergence Analysis</h3>
+                        <p>
+                            The distributed belief fusion protocol ensures rapid convergence across all agents.
+                            SEEK-Multi achieves 93% entropy reduction in just 8 communication rounds, significantly
+                            outperforming
+                            pairwise-only communication and independent agent baselines.
+                        </p>
+                    </div>
+
+                    <figure class="image" style="margin: 2rem 0;">
+                        <img src="static/images/belief_convergence.svg"
+                            alt="Belief convergence showing entropy reduction over communication rounds">
+                    </figure>
+                    <p class="image-caption">
+                        <strong>Figure 3:</strong> Collaborative belief convergence analysis showing information entropy
+                        and cross-agent
+                        belief divergence over communication rounds. SEEK-Multi achieves 95% convergence by round 8,
+                        with the
+                        consensus protocol significantly outperforming pairwise and independent baselines.
+                    </p>
+
+                    <div class="content has-text-justified" style="margin-top: 2rem;">
+                        <h3 class="title is-4">Communication Range Impact</h3>
+                        <p>
+                            We analyze the effect of communication range on system performance, identifying optimal
+                            operating regions
+                            and minimum viable configurations. The system shows graceful degradation in intermittent
+                            connectivity scenarios.
+                        </p>
+                    </div>
+
+                    <figure class="image" style="margin: 2rem 0;">
+                        <img src="static/images/comm_range.svg"
+                            alt="Communication range impact on success rate, completion time, and message overhead">
+                    </figure>
+                    <p class="image-caption">
+                        <strong>Figure 4:</strong> Communication range impact on multi-agent coordination. The optimal
+                        range (25-35m)
+                        balances success rate, completion time, and message overhead. Minimum viable operation requires
+                        ~15m range
+                        for 60% success rate.
+                    </p>
+
+                    <h3 class="title is-4" style="margin-top: 2rem;">Quantitative Results</h3>
+
+                    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Configuration</th>
+                                <th>Success Rate</th>
+                                <th>Speedup</th>
+                                <th>Team SPL</th>
+                                <th>Comm. Msgs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Single Agent (Baseline)</td>
+                                <td>94.2%</td>
+                                <td>1.00×</td>
+                                <td>0.84</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>2 Agents</td>
+                                <td>95.8%</td>
+                                <td>1.87×</td>
+                                <td>0.81</td>
+                                <td>124</td>
+                            </tr>
+                            <tr>
+                                <td>3 Agents</td>
+                                <td>96.4%</td>
+                                <td>2.59×</td>
+                                <td>0.78</td>
+                                <td>218</td>
+                            </tr>
+                            <tr>
+                                <td>4 Agents</td>
+                                <td>96.9%</td>
+                                <td>3.10×</td>
+                                <td>0.75</td>
+                                <td>342</td>
+                            </tr>
+                            <tr>
+                                <td>5 Agents</td>
+                                <td>97.1%</td>
+                                <td>3.53×</td>
+                                <td>0.71</td>
+                                <td>456</td>
+                            </tr>
+                            <tr>
+                                <td>6 Agents</td>
+                                <td>97.3%</td>
+                                <td>3.85×</td>
+                                <td>0.68</td>
+                                <td>589</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3 class="title is-4" style="margin-top: 2rem;">Comparison with Baselines</h3>
+
+                    <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>SR (%)</th>
+                                <th>SPL</th>
+                                <th>Time (s)</th>
+                                <th>Coordination</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SEEK-Multi (Ours)</strong></td>
+                                <td><strong>96.9</strong></td>
+                                <td><strong>0.75</strong></td>
+                                <td><strong>45.2</strong></td>
+                                <td>Semantic + Auction</td>
+                            </tr>
+                            <tr>
+                                <td>Frontier-Based Multi-Robot</td>
+                                <td>89.3</td>
+                                <td>0.58</td>
+                                <td>72.8</td>
+                                <td>Geometric</td>
+                            </tr>
+                            <tr>
+                                <td>Random Allocation</td>
+                                <td>78.4</td>
+                                <td>0.42</td>
+                                <td>98.3</td>
+                                <td>None</td>
+                            </tr>
+                            <tr>
+                                <td>Greedy Distance</td>
+                                <td>85.1</td>
+                                <td>0.51</td>
+                                <td>81.5</td>
+                                <td>Local</td>
+                            </tr>
+                            <tr>
+                                <td>MCTS Coordination</td>
+                                <td>92.7</td>
+                                <td>0.68</td>
+                                <td>56.4</td>
+                                <td>Centralized</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Applications -->
+    <section class="section hero is-light">
+        <div class="container is-max-desktop">
+            <h2 class="title is-3 has-text-centered">Applications</h2>
+
+            <div class="columns is-multiline" style="margin-top: 2rem;">
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper orange" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h4>Industrial Inspection</h4>
+                        <p>Autonomous monitoring of manufacturing facilities, warehouses, and production lines for
+                            equipment status and safety compliance.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper blue" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-search-location"></i>
+                        </div>
+                        <h4>Search and Rescue</h4>
+                        <p>Rapid, coordinated search of disaster sites and collapsed structures to locate survivors and
+                            assess hazards.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper green" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h4>Domestic Robotics</h4>
+                        <p>Multi-robot household assistance for object retrieval, cleaning coordination, and elderly
+                            care support.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper purple" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Security Patrols</h4>
+                        <p>Coordinated surveillance of large facilities with intelligent coverage optimization and
+                            anomaly detection.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper teal" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h4>Healthcare Logistics</h4>
+                        <p>Autonomous delivery and inventory management in hospitals, clinics, and pharmaceutical
+                            facilities.</p>
+                    </div>
+                </div>
+
+                <div class="column is-4">
+                    <div class="feature-card" style="text-align: center;">
+                        <div class="icon-wrapper orange" style="margin: 0 auto 1rem;">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h4>Energy Infrastructure</h4>
+                        <p>Inspection of power plants, substations, and renewable energy installations for maintenance
+                            and safety.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="content has-text-centered">
+                        <p>
+                            <strong>SEEK-Multi</strong> — Collaborative Multi-Agent Semantic Navigation
+                        </p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem; color: #666;">
+                            This page template is adapted from the
+                            <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">
+                                Academic Project Page Template
+                            </a>.
+                        </p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #999;">
+                            © 2026 Adele Chinda. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Smooth scroll for navigation -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

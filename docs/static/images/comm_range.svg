@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 550" width="750" height="550">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FAFBFC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F2F5;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Plot area gradient -->
+    <linearGradient id="plotGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FAFAFA;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Communication range zones -->
+    <linearGradient id="lowRangeZone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFCDD2;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#FFCDD2;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="midRangeZone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF9C4;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#FFF9C4;stop-opacity:0.1" />
+    </linearGradient>
+    <linearGradient id="highRangeZone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#C8E6C9;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#C8E6C9;stop-opacity:0.1" />
+    </linearGradient>
+    
+    <!-- Markers -->
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1976D2"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="750" height="550" fill="url(#mainBg)"/>
+  
+  <!-- Title Section -->
+  <text x="375" y="28" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">
+    Communication Range Impact on Multi-Agent Coordination
+  </text>
+  <text x="375" y="48" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#666">
+    Success Rate, Completion Time, and Message Overhead vs. Communication Range (4 agents, Medium Environment)
+  </text>
+  
+  <!-- ==================== MAIN PLOT AREA ==================== -->
+  <g transform="translate(75, 70)">
+    <!-- Zone backgrounds -->
+    <rect x="0" y="0" width="100" height="280" fill="url(#lowRangeZone)"/>
+    <rect x="100" y="0" width="200" height="280" fill="url(#midRangeZone)"/>
+    <rect x="300" y="0" width="280" height="280" fill="url(#highRangeZone)"/>
+    
+    <!-- Plot area border -->
+    <rect x="0" y="0" width="580" height="280" fill="none" stroke="#CCC" stroke-width="1"/>
+    
+    <!-- Zone labels -->
+    <text x="50" y="-8" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#D32F2F" font-weight="bold">Disconnected</text>
+    <text x="200" y="-8" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#F57C00" font-weight="bold">Intermittent</text>
+    <text x="440" y="-8" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#388E3C" font-weight="bold">Full Connectivity</text>
+    
+    <!-- Zone boundaries -->
+    <line x1="100" y1="0" x2="100" y2="280" stroke="#E57373" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <line x1="300" y1="0" x2="300" y2="280" stroke="#81C784" stroke-width="1.5" stroke-dasharray="6,4"/>
+    
+    <!-- Grid lines - horizontal -->
+    <line x1="0" y1="56" x2="580" y2="56" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="0" y1="112" x2="580" y2="112" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="0" y1="168" x2="580" y2="168" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="0" y1="224" x2="580" y2="224" stroke="#E8E8E8" stroke-width="0.5"/>
+    
+    <!-- Grid lines - vertical -->
+    <line x1="58" y1="0" x2="58" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="116" y1="0" x2="116" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="174" y1="0" x2="174" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="232" y1="0" x2="232" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="290" y1="0" x2="290" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="348" y1="0" x2="348" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="406" y1="0" x2="406" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="464" y1="0" x2="464" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    <line x1="522" y1="0" x2="522" y2="280" stroke="#E8E8E8" stroke-width="0.5"/>
+    
+    <!-- ===================== SUCCESS RATE CURVE ===================== -->
+    <!-- Sigmoid-like curve from ~40% at 5m to ~97% at 50m -->
+    <!-- Y scale: 280 - (rate * 2.8) -->
+    <path d="M 0 168 
+             C 29 168, 58 154, 87 140 
+             L 116 112 
+             C 145 84, 174 56, 203 36.4 
+             C 232 22.4, 261 14, 290 11.2 
+             C 319 8.4, 348 8.4, 377 8.4 
+             C 406 8.4, 435 8.4, 464 8.4 
+             L 493 8.4 L 522 8.4 L 551 8.4 L 580 8.4" 
+          fill="none" stroke="#1976D2" stroke-width="3.5"/>
+    
+    <!-- Success rate confidence band -->
+    <path d="M 0 154 C 29 154, 58 140, 87 126 L 116 98 C 145 70, 174 42, 203 25.2 C 232 14, 261 5.6, 290 2.8 C 319 0, 348 0, 377 0 C 406 0, 435 0, 464 0 L 493 0 L 522 0 L 551 0 L 580 0
+             L 580 16.8 L 551 16.8 L 522 16.8 L 493 16.8 L 464 16.8 C 435 16.8, 406 16.8, 377 16.8 C 348 16.8, 319 16.8, 290 19.6 C 261 22.4, 232 30.8, 203 47.6 C 174 70, 145 98, 116 126 L 87 154 C 58 168, 29 182, 0 182 Z" 
+          fill="#1976D2" fill-opacity="0.12"/>
+    
+    <!-- Success rate data points -->
+    <circle cx="0" cy="168" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="58" cy="154" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="116" cy="112" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="174" cy="56" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="232" cy="22.4" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="290" cy="11.2" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="348" cy="8.4" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="406" cy="8.4" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="464" cy="8.4" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    <circle cx="522" cy="8.4" r="6" fill="#1976D2" stroke="#FFF" stroke-width="2"/>
+    
+    <!-- Success rate value labels -->
+    <text x="0" y="160" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#1976D2" font-weight="bold">40%</text>
+    <text x="116" y="104" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#1976D2" font-weight="bold">60%</text>
+    <text x="232" y="14" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#1976D2" font-weight="bold">92%</text>
+    <text x="406" y="22" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#1976D2" font-weight="bold">97%</text>
+    
+    <!-- ===================== COMPLETION TIME CURVE (Secondary) ===================== -->
+    <!-- Decreasing from ~180s at 5m to ~85s at 50m -->
+    <!-- Y scale for time (right axis): (200 - time) * 1.4 -->
+    <path d="M 0 28 
+             C 29 42, 58 56, 87 70 
+             L 116 98 
+             C 145 126, 174 140, 203 154 
+             C 232 161, 261 168, 290 172.2 
+             C 319 175, 348 178, 377 180 
+             C 406 180, 435 180, 464 180 
+             L 493 180 L 522 180 L 551 180 L 580 180" 
+          fill="none" stroke="#E53935" stroke-width="2.5" stroke-dasharray="8,4"/>
+    
+    <!-- Completion time data points (triangles) -->
+    <polygon points="0,23 6,33 -6,33" fill="#E53935" stroke="#FFF" stroke-width="1.5"/>
+    <polygon points="116,93 122,103 110,103" fill="#E53935" stroke="#FFF" stroke-width="1.5"/>
+    <polygon points="232,156 238,166 226,166" fill="#E53935" stroke="#FFF" stroke-width="1.5"/>
+    <polygon points="348,173 354,183 342,183" fill="#E53935" stroke="#FFF" stroke-width="1.5"/>
+    <polygon points="464,175 470,185 458,185" fill="#E53935" stroke="#FFF" stroke-width="1.5"/>
+    
+    <!-- ===================== MESSAGE OVERHEAD CURVE ===================== -->
+    <!-- Increasing from ~50 at 5m to ~450 at 50m (quadratic growth) -->
+    <!-- Scale: 280 - (messages / 2) -->
+    <path d="M 0 255 
+             C 29 252, 58 247, 87 240 
+             L 116 224 
+             C 145 196, 174 168, 203 140 
+             C 232 112, 261 84, 290 63 
+             C 319 49, 348 42, 377 38.5 
+             C 406 35, 435 32, 464 30 
+             L 493 28 L 522 26 L 551 25 L 580 24" 
+          fill="none" stroke="#FF9800" stroke-width="2.5"/>
+    
+    <!-- Message overhead data points (squares) -->
+    <rect x="-5" y="250" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    <rect x="111" y="219" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    <rect x="227" y="107" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    <rect x="343" y="37" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    <rect x="459" y="25" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    <rect x="575" y="19" width="10" height="10" fill="#FF9800" stroke="#FFF" stroke-width="1.5"/>
+    
+    <!-- ===================== OPTIMAL RANGE INDICATOR ===================== -->
+    <!-- Optimal range: 25-35m -->
+    <rect x="203" y="0" width="116" height="280" fill="none" stroke="#4CAF50" stroke-width="2" stroke-dasharray="5,3" rx="3"/>
+    <text x="261" y="270" font-family="Arial, sans-serif" font-size="9" text-anchor="middle" fill="#388E3C" font-weight="bold">Optimal Range</text>
+    
+    <!-- ===================== CRITICAL THRESHOLD ===================== -->
+    <!-- Minimum viable at ~15m -->
+    <line x1="116" y1="0" x2="116" y2="280" stroke="#D32F2F" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="116" y="268" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#D32F2F" font-weight="bold">Min. Viable</text>
+    
+    <!-- ===================== AXES ===================== -->
+    <line x1="0" y1="0" x2="0" y2="280" stroke="#333" stroke-width="2"/>
+    <line x1="0" y1="280" x2="580" y2="280" stroke="#333" stroke-width="2"/>
+    <line x1="580" y1="0" x2="580" y2="280" stroke="#E53935" stroke-width="2"/>
+    
+    <!-- X-axis labels -->
+    <text x="0" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">5</text>
+    <text x="58" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">10</text>
+    <text x="116" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">15</text>
+    <text x="174" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">20</text>
+    <text x="232" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">25</text>
+    <text x="290" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">30</text>
+    <text x="348" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">35</text>
+    <text x="406" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">40</text>
+    <text x="464" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">45</text>
+    <text x="522" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">50</text>
+    <text x="580" y="298" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#333">55</text>
+    
+    <!-- X-axis title -->
+    <text x="290" y="322" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#333">
+      Communication Range (meters)
+    </text>
+    
+    <!-- Left Y-axis labels (Success Rate %) -->
+    <text x="-10" y="284" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">0%</text>
+    <text x="-10" y="228" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">20%</text>
+    <text x="-10" y="172" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">40%</text>
+    <text x="-10" y="116" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">60%</text>
+    <text x="-10" y="60" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">80%</text>
+    <text x="-10" y="4" font-family="Arial, sans-serif" font-size="10" text-anchor="end" fill="#1976D2">100%</text>
+    
+    <!-- Left Y-axis title -->
+    <text x="-50" y="140" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#1976D2" transform="rotate(-90, -50, 140)">
+      Success Rate (%)
+    </text>
+    
+    <!-- Right Y-axis labels (Time in seconds) -->
+    <text x="595" y="284" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#E53935">200s</text>
+    <text x="595" y="214" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#E53935">150s</text>
+    <text x="595" y="144" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#E53935">100s</text>
+    <text x="595" y="74" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#E53935">50s</text>
+    <text x="595" y="4" font-family="Arial, sans-serif" font-size="10" text-anchor="start" fill="#E53935">0s</text>
+    
+    <!-- Right Y-axis title -->
+    <text x="640" y="140" font-family="Arial, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" fill="#E53935" transform="rotate(90, 640, 140)">
+      Completion Time (s)
+    </text>
+  </g>
+  
+  <!-- ==================== INSET: NETWORK CONNECTIVITY ==================== -->
+  <g transform="translate(510, 375)">
+    <rect x="0" y="0" width="210" height="90" fill="#FFF" stroke="#DDD" rx="5"/>
+    <text x="105" y="16" font-family="Arial, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" fill="#333">Network Connectivity</text>
+    
+    <!-- Low connectivity example -->
+    <g transform="translate(25, 35)">
+      <circle cx="0" cy="0" r="8" fill="#1976D2" opacity="0.7"/>
+      <circle cx="25" cy="15" r="8" fill="#4CAF50" opacity="0.7"/>
+      <circle cx="10" cy="35" r="8" fill="#FF9800" opacity="0.7"/>
+      <!-- Sparse connections -->
+      <line x1="0" y1="0" x2="25" y2="15" stroke="#CCC" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="12" y="55" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#D32F2F">Low (5m)</text>
+    </g>
+    
+    <!-- Medium connectivity example -->
+    <g transform="translate(90, 35)">
+      <circle cx="0" cy="0" r="8" fill="#1976D2" opacity="0.7"/>
+      <circle cx="25" cy="0" r="8" fill="#4CAF50" opacity="0.7"/>
+      <circle cx="12" cy="25" r="8" fill="#FF9800" opacity="0.7"/>
+      <!-- Partial connections -->
+      <line x1="0" y1="0" x2="25" y2="0" stroke="#888" stroke-width="1.5"/>
+      <line x1="0" y1="0" x2="12" y2="25" stroke="#888" stroke-width="1.5"/>
+      <line x1="25" y1="0" x2="12" y2="25" stroke="#CCC" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="12" y="45" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#F57C00">Med (20m)</text>
+    </g>
+    
+    <!-- High connectivity example -->
+    <g transform="translate(155, 35)">
+      <circle cx="0" cy="0" r="8" fill="#1976D2" opacity="0.7"/>
+      <circle cx="25" cy="0" r="8" fill="#4CAF50" opacity="0.7"/>
+      <circle cx="12" cy="25" r="8" fill="#FF9800" opacity="0.7"/>
+      <!-- Full connections -->
+      <line x1="0" y1="0" x2="25" y2="0" stroke="#388E3C" stroke-width="2"/>
+      <line x1="0" y1="0" x2="12" y2="25" stroke="#388E3C" stroke-width="2"/>
+      <line x1="25" y1="0" x2="12" y2="25" stroke="#388E3C" stroke-width="2"/>
+      <text x="12" y="45" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#388E3C">High (35m)</text>
+    </g>
+  </g>
+  
+  <!-- ==================== LEGEND ==================== -->
+  <g transform="translate(75, 415)">
+    <rect x="0" y="0" width="420" height="75" fill="#FFF" stroke="#DDD" rx="5"/>
+    
+    <!-- Row 1 -->
+    <line x1="15" y1="20" x2="50" y2="20" stroke="#1976D2" stroke-width="3.5"/>
+    <circle cx="32" cy="20" r="5" fill="#1976D2" stroke="#FFF" stroke-width="1.5"/>
+    <text x="60" y="24" font-family="Arial, sans-serif" font-size="10" fill="#333">Success Rate</text>
+    
+    <line x1="150" y1="20" x2="185" y2="20" stroke="#E53935" stroke-width="2.5" stroke-dasharray="8,4"/>
+    <polygon points="167,15 173,25 161,25" fill="#E53935"/>
+    <text x="195" y="24" font-family="Arial, sans-serif" font-size="10" fill="#333">Completion Time</text>
+    
+    <line x1="300" y1="20" x2="335" y2="20" stroke="#FF9800" stroke-width="2.5"/>
+    <rect x="313" y="15" width="8" height="8" fill="#FF9800"/>
+    <text x="345" y="24" font-family="Arial, sans-serif" font-size="10" fill="#333">Msg Count</text>
+    
+    <!-- Row 2 -->
+    <rect x="15" y="45" width="35" height="14" fill="none" stroke="#4CAF50" stroke-width="2" stroke-dasharray="5,3"/>
+    <text x="60" y="56" font-family="Arial, sans-serif" font-size="10" fill="#333">Optimal Range</text>
+    
+    <line x1="150" y1="52" x2="185" y2="52" stroke="#D32F2F" stroke-width="2" stroke-dasharray="4,2"/>
+    <text x="195" y="56" font-family="Arial, sans-serif" font-size="10" fill="#333">Min. Viable</text>
+    
+    <rect x="300" y="45" width="35" height="14" fill="#1976D2" fill-opacity="0.12" stroke="#1976D2" stroke-width="1"/>
+    <text x="345" y="56" font-family="Arial, sans-serif" font-size="10" fill="#333">95% CI</text>
+  </g>
+  
+  <!-- ==================== ADDITIONAL ANNOTATIONS ==================== -->
+  <g transform="translate(75, 500)">
+    <text x="0" y="12" font-family="Arial, sans-serif" font-size="9" fill="#666" font-style="italic">
+      † Results averaged over 100 trials per configuration. Error bars show 95% confidence intervals.
+    </text>
+    <text x="0" y="26" font-family="Arial, sans-serif" font-size="9" fill="#666" font-style="italic">
+      ‡ Message overhead measured as total inter-agent messages per episode (4 agents).
+    </text>
+  </g>
+</svg>
