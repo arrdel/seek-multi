@@ -69,56 +69,41 @@
             font-family: 'Noto Sans', sans-serif;
         }
 
-        .hero.is-primary {
-            background: #ffffff;
-        }
-
         .publication-title {
             font-family: 'Google Sans', sans-serif;
             font-weight: 700;
-            color: #1976D2;
-            font-size: 3.5rem;
+            background: black;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-body {
-            padding: 4rem 1.5rem;
+            padding: 3rem 1.5rem;
         }
 
         .author-block a {
-            color: #1976D2;
+            color: #3273dc;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
-        /* .author-block a:hover {
-            border-bottom-color: #fff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        } */
-
-        .publication-links .button {
-            margin: 0.25rem;
-            border-radius: 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            background-color: #1976D2 !important;
-            color: #ffffff !important;
-            border: 2px solid #1976D2 !important;
-        }
-
-        .publication-links .button:hover {
+        .link-block .button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            background-color: #1565C0 !important;
-            border-color: #1565C0 !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
 
         .section {
-            padding: 4rem 1.5rem;
+            padding: 3rem 1.5rem;
         }
 
         .section.hero.is-light {
-            background: linear-gradient(180deg, #f5f7fa 0%, #fff 100%);
+            background: linear-gradient(to bottom, #f0f4f8, #ffffff);
+        }
+
+        .hero.teaser {
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
         }
 
         .title.is-3 {
@@ -354,18 +339,6 @@
             color: #86efac;
         }
 
-        .teaser-section {
-            background: var(--hero-light);
-            padding: 3rem 1.5rem;
-        }
-
-        .teaser-section figure {
-            background: #fff;
-            padding: 1rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-        }
-
         .highlight-box {
             background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
             border-radius: 12px;
@@ -453,15 +426,15 @@
 <body>
 
     <!-- Hero Section -->
-    <section class="hero is-primary is-medium">
+    <section class="hero">
         <div class="hero-body">
             <div class="container is-max-desktop">
                 <div class="columns is-centered">
                     <div class="column has-text-centered">
-                        <h1 class="title is-1 publication-title" style="color: #1976D2;">
+                        <h1 class="title is-1 publication-title">
                             SEEK-Multi
                         </h1>
-                        <h2 class="subtitle is-4" style="color: #333333; margin-top: 0.5rem;">
+                        <h2 class="subtitle is-4" style="margin-top: 0.5rem;">
                             Collaborative Multi-Agent Semantic Reasoning for<br>Object Goal Navigation in Inspection
                             Tasks
                         </h2>
@@ -475,19 +448,19 @@
                         <div class="column has-text-centered" style="margin-top: 1.5rem;">
                             <div class="publication-links">
                                 <span class="link-block">
-                                    <a href="static/pdfs/seek-multi.pdf" class="button is-white is-outlined is-rounded">
+                                    <a href="static/pdfs/seek-multi.pdf" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon"><i class="fas fa-file-pdf"></i></span>
                                         <span>Paper</span>
                                     </a>
                                 </span>
                                 <span class="link-block">
-                                    <a href="https://github.com/arrdel/seek-multi"
-                                        class="button is-white is-outlined is-rounded">
+                                    <a href="https://github.com/arrdel/seek-multi" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
                                         <span class="icon"><i class="fab fa-github"></i></span>
                                         <span>Code</span>
                                     </a>
                                 </span>
-
                             </div>
                         </div>
                     </div>
@@ -497,18 +470,17 @@
     </section>
 
     <!-- Teaser Section -->
-    <section class="teaser-section">
+    <section class="hero teaser">
         <div class="container is-max-desktop">
-            <figure class="image animate-fade-in">
+            <div class="hero-body">
                 <img src="static/images/seek_multi_overview.svg"
-                    alt="SEEK-Multi Overview: Multiple robots collaboratively searching for objects in an indoor environment">
-            </figure>
-            <p class="has-text-centered" style="color: rgba(0, 0, 0, 0.9); margin-top: 1.5rem; font-size: 1.1rem;">
-                <strong style="color: #000000;">SEEK-Multi</strong> enables teams of robots to collaboratively search
-                for
-                and inspect target objects
-                through distributed semantic reasoning, belief sharing, and coordinated task allocation.
-            </p>
+                    alt="SEEK-Multi Overview: Multiple robots collaboratively searching for objects in an indoor environment"
+                    style="width:100%; border-radius: 8px">
+                <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+                    <strong>SEEK-Multi</strong> enables teams of robots to collaboratively search for
+                    and inspect target objects through distributed semantic reasoning, belief sharing, and coordinated task allocation.
+                </h2>
+            </div>
         </div>
     </section>
 

@@ -1,0 +1,1185 @@
+================================================================================
+                                  SEEK-Multi
+     Collaborative Multi-Agent Semantic Reasoning for Object Goal Navigation
+                              in Inspection Tasks
+================================================================================
+
+                                 Author Names
+                                 Affiliations
+
+================================================================================
+                                   ABSTRACT
+================================================================================
+
+This paper addresses the fundamental challenge of collaborative multi-agent object-goal navigation for autonomous inspections in complex, real-world environments. While single-agent approaches to object-goal navigation have demonstrated considerable promise in recent years, scaling these methods to larger environments necessitates the coordination of multiple robots to achieve efficient coverage, faster task completion, and robust operation under uncertainty.
+
+We introduce SEEK-Multi, a comprehensive framework that extends semantic-guided object inspection to multi-robot systems through distributed belief sharing, collaborative planning, coordinated task allocation, and adaptive communication protocols. SEEK-Multi enables multiple agents to share semantic understanding and inspection findings through a distributed Relational Semantic Network (RSN) and a shared Dynamic Scene Graph (DSG), maintaining consistency across the team while accommodating communication constraints.
+
+We propose novel algorithms for collaborative exploration that leverage semantic priors, belief fusion using consensus protocols with provable convergence guarantees, and conflict-free task allocation based on auction mechanisms. Our extensive simulation analyses across diverse environment configurations demonstrate that SEEK-Multi achieves significant speedup over single-agent approaches while maintaining high success rates, with near-linear scaling efficiency for up to four agents and graceful degradation under communication failures.
+
+We validate our approach through comprehensive simulations including ablation studies, sensitivity analyses, and comparisons with state-of-the-art multi-agent coordination methods, demonstrating its practicality for real-world multi-robot inspection scenarios in industrial, search-and-rescue, and domestic environments.
+
+
+================================================================================
+                              1. INTRODUCTION
+================================================================================
+
+Consider a team of autonomous robots tasked with searching for and inspecting target objects across a large industrial facility. While a single robot can methodically search each area, the task completion time scales linearly with the environment size, making single-agent solutions impractical for time-critical applications. Deploying multiple robots offers the potential for significant speedup, but realizing this potential requires sophisticated coordination to avoid redundant effort and conflicting actions.
+
+This multi-agent object-goal navigation problem is crucial for time-sensitive 
+applications such as emergency response, security patrols, industrial 
+inspection, and search-and-rescue operations.
+
+The deployment of multi-robot systems for inspection tasks has gained 
+significant attention in recent years, driven by advances in sensing, 
+communication, and computation. Industries ranging from manufacturing to energy 
+production increasingly rely on autonomous inspection to reduce costs, improve 
+safety, and enable continuous monitoring. However, the transition from 
+single-robot to multi-robot inspection introduces fundamental challenges in 
+coordination, communication, and decision-making that require novel algorithmic 
+solutions.
+
+Multi-agent coordination for object-goal navigation presents unique challenges 
+beyond the single-agent case:
+
+  1. Agents must efficiently partition the search space to minimize overlap 
+     while ensuring complete coverage
+  2. Agents must share observations and update their beliefs about object 
+     locations in a consistent manner
+  3. The planning framework must account for the actions and intentions of all 
+     agents to avoid conflicts
+  4. The system must be robust to communication failures, agent heterogeneity, 
+     and dynamic environmental changes
+  5. The framework must balance the benefits of coordination against its 
+     computational and communication costs
+
+Recent work on single-agent semantic-guided navigation has demonstrated the 
+value of incorporating prior knowledge and semantic reasoning into object 
+search. The SEEK framework introduced the Relational Semantic Network (RSN) for 
+encoding object-room relationships and showed significant improvements over 
+geometric coverage approaches.
+
+The multi-agent extension of semantic navigation raises several research 
+questions that motivate our work:
+  • How can semantic beliefs be efficiently shared and fused across multiple 
+    agents with potentially different observations?
+  • How should task allocation incorporate semantic priors while respecting 
+    coordination constraints?
+  • What communication protocols best balance information sharing with bandwidth 
+    limitations?
+  • How can the system maintain performance under communication failures and 
+    agent heterogeneity?
+
+In this paper, we propose SEEK-Multi, a comprehensive framework for 
+collaborative multi-agent object-goal navigation that extends the SEEK 
+architecture to multi-robot teams.
+
+The design of SEEK-Multi is guided by several key principles:
+  • SEMANTIC AWARENESS: All coordination mechanisms leverage semantic 
+    understanding to improve efficiency
+  • SCALABILITY: Algorithms and communication protocols scale gracefully with 
+    the number of agents
+  • ROBUSTNESS: The system degrades gracefully under communication failures and 
+    agent heterogeneity
+  • FLEXIBILITY: The framework supports various coordination modes and can adapt 
+    to different deployment scenarios
+
+OUR KEY CONTRIBUTIONS:
+
+  1. We introduce SEEK-Multi, a comprehensive framework for collaborative 
+     multi-agent object-goal navigation using distributed semantic reasoning, 
+     supporting both centralized and decentralized coordination
+
+  2. We propose a distributed belief fusion algorithm based on consensus 
+     protocols that enables agents to share and combine observations efficiently 
+     with provable convergence guarantees
+
+  3. We design a collaborative planning algorithm that coordinates task 
+     allocation and path planning across multiple agents using auction-based 
+     mechanisms with semantic-aware bidding
+
+  4. We develop an adaptive communication protocol that balances information 
+     sharing with bandwidth constraints and provides robustness to message loss
+
+  5. We demonstrate through extensive simulation experiments that SEEK-Multi 
+     achieves near-linear speedup with multiple agents while maintaining high 
+     success rates across diverse environment configurations
+
+
+================================================================================
+                             2. RELATED WORKS
+================================================================================
+
+Our work builds upon and integrates advances from several research areas: 
+multi-robot coordination, multi-agent path planning, distributed belief 
+maintenance, semantic navigation, and scene understanding.
+
+MULTI-ROBOT COORDINATION
+------------------------
+Multi-robot systems have been extensively studied for tasks including 
+exploration, coverage, and search and rescue. Coordination strategies range from 
+centralized approaches with a single decision-maker to fully decentralized 
+methods using local communication. Market-based approaches provide a middle 
+ground, using auction mechanisms for task allocation while maintaining 
+scalability. Recent work has explored learning-based coordination, where agents 
+learn coordination strategies through reinforcement learning.
+
+MULTI-AGENT EXPLORATION AND SEARCH
+----------------------------------
+Coordinated exploration has been studied extensively, with frontier-based 
+methods forming a foundation for many approaches. Multi-robot extensions assign 
+frontiers to robots based on distance, information gain, or other criteria. 
+Recent work has incorporated semantic information into exploration, using object 
+recognition to guide search toward promising areas.
+
+MULTI-AGENT PATH PLANNING
+-------------------------
+Coordinated path planning for multiple agents must balance efficiency with 
+collision avoidance. Approaches include coupled planning that considers all 
+agents jointly, prioritized planning that plans sequentially, and 
+velocity-obstacle methods for dynamic environments. Conflict-based search (CBS) 
+has emerged as an efficient approach for optimal multi-agent path finding.
+
+DISTRIBUTED BELIEF MAINTENANCE
+------------------------------
+Maintaining consistent beliefs across multiple agents is fundamental to 
+multi-robot perception. Consensus algorithms provide a principled approach to 
+fusing estimates from multiple agents, with well-understood convergence 
+properties.
+
+SEMANTIC NAVIGATION AND SCENE UNDERSTANDING
+-------------------------------------------
+Recent advances in semantic navigation leverage foundation models for improved 
+reasoning. These approaches use vision-language models to understand scene 
+semantics and guide navigation toward likely target locations. Scene graphs 
+provide structured representations of environments that capture objects, rooms, 
+and their relationships.
+
+COMMUNICATION IN MULTI-ROBOT SYSTEMS
+------------------------------------
+Communication is fundamental to multi-robot coordination, with significant 
+research on protocols, bandwidth management, and robustness. Approaches range 
+from continuous communication assuming reliable infrastructure to intermittent 
+communication in bandwidth-limited scenarios.
+
+
+================================================================================
+                          3. PROBLEM FORMULATION
+================================================================================
+
+We formally define the multi-agent object-goal navigation problem, including the 
+environment model, agent capabilities, communication constraints, and 
+performance metrics.
+
+3.1 ENVIRONMENT MODEL
+---------------------
+We consider a structured indoor environment represented as a topological-metric 
+map. The environment is partitioned into a set of rooms V = {v₁, ..., vₘ} 
+connected by traversable edges E ⊆ V × V.
+
+Each room vⱼ has associated attributes including:
+  • Semantic type ℓ(vⱼ) ∈ L (e.g., office, kitchen, hallway)
+  • Geometric extent defining the room boundary
+  • Set of contained objects O(vⱼ)
+  • Search time τ(vⱼ) required for thorough inspection
+
+3.2 MULTI-AGENT OBJECT-GOAL NAVIGATION
+--------------------------------------
+We consider a team of N robots R = {r₁, ..., rₙ} operating in the environment. 
+Each robot rᵢ has state xᵢ ∈ X, takes actions uᵢ ∈ U, and receives observations 
+zᵢ ∈ Z.
+
+  • State space X = SE(2) × V includes the robot's pose and current room
+  • Action space U includes navigation and inspection actions
+  • Observation space Z includes object detections with confidence scores
+
+The objective is to locate a target object yG of class y^l_G as quickly as 
+possible.
+
+3.3 OBSERVATION MODEL
+---------------------
+Each robot has a detection sensor with the following characteristics:
+  • Detection range d_det: maximum distance at which objects can be detected
+  • True positive rate p_tp: probability of detecting the target when in range
+  • False positive rate p_fp: probability of false detection per observation
+  • Position noise σₚ: uncertainty in detected object position
+
+When robot rᵢ is in room v containing the target object and performs a search 
+action, the observation model is:
+
+    P(zᵢ = detect | yG ∈ v) = p_tp · 𝟙[in detection range]
+
+3.4 SEMANTIC PRIOR MODEL
+------------------------
+We leverage semantic priors about object-room relationships, captured in a 
+Relational Semantic Network (RSN). The RSN encodes the conditional probability 
+of finding an object class in a room type:
+
+    P(y^l ∈ ℓ) = RSN(y^l, ℓ)
+
+For example, P(fire extinguisher ∈ kitchen) captures the prior knowledge that 
+fire extinguishers are commonly found in kitchens.
+
+Given the room types in the environment, the prior probability of finding the 
+target in each room is:
+
+                          P(y^l_G ∈ ℓ(vⱼ))
+    P₀(yG ∈ vⱼ) = ────────────────────────────
+                   Σₖ P(y^l_G ∈ ℓ(vₖ))
+
+3.5 PERFORMANCE METRICS
+-----------------------
+We measure performance using the team's Success weighted by Path Length (SPL):
+
+                          l*
+    SPL_team = S · ─────────────────────
+                    max(Σᵢ pᵢ, l*)
+
+where S ∈ {0,1} indicates success, l* is the optimal single-agent path length, 
+and pᵢ is the path length traveled by robot rᵢ.
+
+We also measure:
+  • Success rate (SR): Fraction of trials where target is found within time limit
+  • Time to completion (TTC): Time steps until target is found
+  • Coverage overlap: Fraction of rooms searched by multiple agents
+  • Communication efficiency: Messages per successful search
+
+3.6 COMMUNICATION MODEL
+-----------------------
+Robots communicate through message passing with the following constraints:
+  • RANGE: Robot rᵢ can communicate with rⱼ if ||xᵢ - xⱼ|| ≤ d_comm
+  • BANDWIDTH: Maximum B messages per time step per robot
+  • LATENCY: Messages arrive with delay δ
+  • RELIABILITY: Messages are delivered with probability 1 - p_loss
+
+Message types with associated priorities:
+  • Object detections (priority 3): Location and confidence of detected objects
+  • Belief updates (priority 2): Probability distributions over rooms
+  • Intentions (priority 2): Planned actions for coordination
+  • DSG updates (priority 1): Changes to the shared scene graph
+  • Heartbeats (priority 0): Status and position updates
+
+
+================================================================================
+                       4. SEEK-MULTI ARCHITECTURE
+================================================================================
+
+SEEK-Multi extends the single-agent SEEK architecture to multi-robot teams 
+through three key components: distributed semantic representations, 
+collaborative planning, and a communication protocol for belief sharing.
+
+4.1 SYSTEM OVERVIEW
+-------------------
+Each robot in SEEK-Multi maintains the following components:
+  • LOCAL DSG: A copy of the Dynamic Scene Graph representing the environment 
+    structure and discovered objects
+  • LOCAL RSN BELIEF: Probability distribution over target location based on 
+    semantic reasoning
+  • TASK ALLOCATOR: Component for coordinating room assignments with other agents
+  • LOCAL PLANNER: Navigation planner for reaching assigned targets
+  • COMMUNICATION MODULE: Interface for sending and receiving messages
+
+The robots operate in a sense-plan-act loop:
+  1. SENSE: Receive observations from sensors and messages from other agents
+  2. UPDATE: Update local DSG and beliefs based on new information
+  3. COORDINATE: Exchange intentions and resolve conflicts
+  4. PLAN: Compute actions to execute
+  5. ACT: Execute planned actions
+  6. COMMUNICATE: Share updates with other agents
+
+4.2 DISTRIBUTED SEMANTIC REPRESENTATIONS
+----------------------------------------
+
+Shared Dynamic Scene Graph
+--------------------------
+The Dynamic Scene Graph (DSG) provides a hierarchical representation of the 
+environment, with layers representing:
+  • OBJECT LAYER: Individual objects with positions and semantic labels
+  • PLACE LAYER: Navigable locations within rooms
+  • ROOM LAYER: Semantic regions with room types
+  • BUILDING LAYER: Overall structure and connectivity
+
+When robot rᵢ discovers new information, it broadcasts an incremental update:
+
+    ΔGᵢ = {(op, node/edge, data, tᵢ, cᵢ)}
+
+where op ∈ {add, update, delete}, tᵢ is a timestamp, and cᵢ is a confidence 
+score.
+
+Robots merge updates using timestamp-based conflict resolution:
+
+    Gᵢ ← Merge(Gᵢ, ΔGⱼ)  if tⱼ > tᵢ^node OR cⱼ > cᵢ^node
+
+Distributed Relational Semantic Network
+---------------------------------------
+The RSN encodes relationships between object classes and room types:
+
+    RSN: Y × L → [0, 1]
+
+Each robot maintains a local belief state over target location:
+
+    Pᵢ(yG) = {Pᵢ(yG ∈ vⱼ) : vⱼ ∈ V}
+
+The belief is initialized from the RSN prior:
+
+                          RSN(y^l_G, ℓ(vⱼ))
+    Pᵢ⁰(yG ∈ vⱼ) = ─────────────────────────────
+                      Σₖ RSN(y^l_G, ℓ(vₖ))
+
+Beliefs are updated from local observations using Bayesian inference:
+
+                          P(zᵢ | yG ∈ v) · Pᵢ(yG ∈ v)
+    Pᵢ(yG ∈ v | zᵢ) = ─────────────────────────────────────
+                        Σᵥ' P(zᵢ | yG ∈ v') · Pᵢ(yG ∈ v')
+
+When robot rᵢ completes a thorough search of room v without finding the target:
+
+                              (1 - pₐ) · Pᵢ(yG ∈ v)
+    Pᵢ(yG ∈ v | ¬det) = ──────────────────────────────
+                          1 - pₐ · Pᵢ(yG ∈ v)
+
+4.3 DISTRIBUTED BELIEF FUSION
+-----------------------------
+
+Weighted Consensus Fusion
+-------------------------
+When robot rᵢ receives belief Pⱼ(yG) from robot rⱼ with confidence cⱼ, it 
+updates its belief using weighted averaging:
+
+                            cᵢ · Pᵢ(yG ∈ v) + cⱼ · Pⱼ(yG ∈ v)
+    Pᵢ^new(yG ∈ v) = ─────────────────────────────────────────────
+                                      cᵢ + cⱼ
+
+The confidence is updated based on the number and quality of observations:
+
+    cᵢ^new = min(c_max, √(cᵢ² + cⱼ²) + α · |obsᵢ^new|)
+
+This update rule has several desirable properties:
+  • Beliefs from agents with more observations have higher influence
+  • Confidence grows sublinearly to prevent overconfidence
+  • The fusion is symmetric and associative
+
+Periodic Synchronization
+------------------------
+For environments with limited or intermittent communication:
+
+                           Σⱼ∈Nᵢ cⱼ · Pⱼ(yG ∈ v)
+    P^sync(yG ∈ v) = ─────────────────────────────
+                            Σⱼ∈Nᵢ cⱼ
+
+Synchronization events are triggered:
+  • Periodically at fixed intervals
+  • When belief divergence exceeds threshold
+  • When agents come into communication range after disconnection
+
+4.4 COLLABORATIVE PLANNING
+--------------------------
+
+Task Allocation
+---------------
+Tasks correspond to searching rooms, with priority based on belief and semantic 
+value:
+
+    Priority(v) = P(yG ∈ v) · Value(v) · (1 - Searched(v))
+
+The value function incorporates semantic information:
+
+    Value(v) = RSN(y^l_G, ℓ(v)) · Area(v)^(-0.5)
+
+We use an auction-based allocation mechanism:
+
+                    Priority(v)
+    Bidᵢ(v) = ────────────────────── · LoadFactorᵢ
+               Costᵢ(v) + ε
+
+where Costᵢ(v) is the travel cost from robot i's current position.
+
+The load factor penalizes agents with many assigned tasks:
+
+    LoadFactorᵢ = exp(-β · |Assignedᵢ|)
+
+The allocation is computed iteratively using a distributed auction:
+  1. Each robot computes bids for all unassigned high-priority tasks
+  2. Robots broadcast their top-k bids
+  3. Tasks with a single bidder are tentatively assigned
+  4. For contested tasks, the highest bidder wins; ties broken by robot ID
+  5. Losing robots update their bids and the process repeats
+  6. Process terminates when all tasks assigned or maximum iterations reached
+
+Intention Sharing and Conflict Resolution
+-----------------------------------------
+Robots share their intended actions to enable coordination without centralized 
+control. Intention messages include:
+  • Target room for next search
+  • Expected arrival time
+  • Planned path (compressed representation)
+  • Alternative targets in case of conflict
+
+When multiple robots intend to search the same room, we use priority-based 
+resolution:
+
+    Winner = argmax_{i ∈ Contestants} (Bidᵢ(v), -Costᵢ(v), -IDᵢ)
+
+This lexicographic ordering prioritizes by bid, then by proximity, then by ID 
+for deterministic tie-breaking.
+
+
+================================================================================
+                         5. THEORETICAL ANALYSIS
+================================================================================
+
+We provide theoretical analysis of SEEK-Multi's convergence properties and 
+expected speedup.
+
+5.1 CONVERGENCE OF BELIEF FUSION
+--------------------------------
+
+THEOREM 1 (Belief Convergence):
+Under the consensus-based belief fusion protocol, if the communication graph is 
+connected over any time interval of length T, and beliefs are updated at bounded 
+intervals, then agent beliefs converge to a common distribution exponentially 
+fast.
+
+The belief fusion update can be written in matrix form:
+
+    P^(k+1) = W^k · P^k
+
+where W^k is a row-stochastic matrix determined by the confidence weights and 
+communication graph at time k.
+
+The rate of convergence is determined by the second-largest eigenvalue:
+
+    ||P^k - 1·P*|| ≤ C · λ₂^k
+
+where λ₂ < 1 for connected graphs.
+
+COROLLARY:
+If all agents have equal confidence and the communication graph is complete, 
+beliefs converge to the arithmetic mean of initial beliefs.
+
+5.2 SPEEDUP ANALYSIS
+--------------------
+
+THEOREM 2 (Multi-Agent Speedup):
+For N agents with perfect coordination, no communication overhead, and uniform 
+search costs, the expected time to find the target satisfies:
+
+    E[Tₙ] ≤ E[T₁]/N + O(log N / N)
+
+where Tₙ is the completion time with N agents.
+
+THEOREM 3 (Sublinear Speedup Bound):
+In the presence of coordination overhead τ_coord per agent and communication 
+delays δ, the speedup is bounded by:
+
+                              N
+    Speedup(N) ≤ ─────────────────────────────────
+                  1 + (N-1) · (τ_coord + δ)/E[T₁]
+
+This bound shows that coordination overhead and communication delays reduce the 
+achievable speedup, with the effect becoming more pronounced as N increases.
+
+5.3 TASK ALLOCATION OPTIMALITY
+------------------------------
+
+THEOREM (Auction Convergence):
+The distributed auction algorithm converges to a stable allocation in 
+O(M log M) iterations, where M is the number of tasks.
+
+THEOREM (ε-Competitive Allocation):
+The auction-based allocation achieves total utility within Nε of the optimal 
+allocation, where ε is the minimum price increment.
+
+5.4 COMMUNICATION COMPLEXITY
+----------------------------
+
+THEOREM (Message Complexity):
+Under the SEEK-Multi communication protocol, the expected number of messages per 
+time step is O(N²) for full connectivity and O(N·d) for graphs with average 
+degree d.
+
+
+================================================================================
+                        6. EXPERIMENTAL RESULTS
+================================================================================
+
+We evaluate SEEK-Multi through comprehensive simulation experiments comparing 
+performance across different numbers of agents, coordination strategies, 
+environment configurations, and failure conditions.
+
+6.1 SIMULATION SETUP
+--------------------
+
+Environment Configuration
+-------------------------
+We evaluate on three environment types of increasing complexity:
+
+  • SMALL OFFICE (12 rooms, 300 m²): entrance, lobby, 2 offices, conference 
+    room, kitchen, break room, 2 hallways, restroom, storage, server room
+
+  • MEDIUM BUILDING (24 rooms, 800 m²): multiple floors with offices, labs, 
+    common areas, and utility rooms
+
+  • LARGE FACILITY (48 rooms, 2000 m²): industrial-scale environment with 
+    warehouses, control rooms, and specialized areas
+
+Sensor Model Parameters:
+  • Detection range: 5 m (10 m with thorough search)
+  • True positive rate: 0.9
+  • False positive rate: 0.05
+  • Position noise: σ = 0.5 m
+
+Communication Model Parameters:
+  • Communication range: 50 m (can be varied)
+  • Bandwidth: 10 messages/step
+  • Latency: 1 step
+  • Default packet loss: 0%
+
+Baselines:
+  • Single-Agent SEEK: Original single-robot semantic search
+  • Frontier-Based Multi-Robot: Classic frontier allocation without semantics
+  • Random Walk: Independent random exploration by each agent
+  • Greedy Coverage: Agents greedily select nearest unexplored room
+  • No Coordination: SEEK-Multi without coordination
+
+6.2 SCALING EXPERIMENTS
+-----------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 1: Multi-Agent Performance Comparison                                 │
+│ Results averaged over 100 trials with standard deviation in parentheses     │
+├─────────────────┬──────────┬────────────────┬──────────────┬───────────────┤
+│ Agents          │ SR (%)   │ SPL            │ Steps        │ Speedup       │
+├─────────────────┼──────────┼────────────────┼──────────────┼───────────────┤
+│ 1 (SEEK)        │ 96       │ 0.84 (0.12)    │ 127 (34)     │ 1.0×          │
+│ 2 (SEEK-Multi)  │ 97       │ 0.81 (0.11)    │ 68 (22)      │ 1.87×         │
+│ 3 (SEEK-Multi)  │ 97       │ 0.78 (0.10)    │ 49 (18)      │ 2.59×         │
+│ 4 (SEEK-Multi)  │ 96       │ 0.75 (0.11)    │ 41 (15)      │ 3.10×         │
+│ 5 (SEEK-Multi)  │ 95       │ 0.71 (0.12)    │ 36 (14)      │ 3.53×         │
+│ 6 (SEEK-Multi)  │ 94       │ 0.68 (0.13)    │ 33 (13)      │ 3.85×         │
+└─────────────────┴──────────┴────────────────┴──────────────┴───────────────┘
+
+Key findings:
+  • Near-linear speedup up to 4 agents
+  • Beyond 4 agents, diminishing returns due to coordination overhead
+  • The slight decrease in SPL with more agents reflects increased total 
+    distance traveled
+
+6.3 BASELINE COMPARISON
+-----------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 2: Comparison with Baseline Methods (3 agents, medium environment)    │
+├─────────────────────────┬──────────┬────────────────┬───────────────────────┤
+│ Method                  │ SR (%)   │ SPL            │ Steps                 │
+├─────────────────────────┼──────────┼────────────────┼───────────────────────┤
+│ SEEK-Multi (Ours)       │ 97       │ 0.78           │ 49                    │
+│ Frontier-Based          │ 94       │ 0.62           │ 78                    │
+│ Greedy Coverage         │ 91       │ 0.55           │ 94                    │
+│ No Coordination         │ 89       │ 0.52           │ 102                   │
+│ Random Walk             │ 72       │ 0.31           │ 156                   │
+└─────────────────────────┴──────────┴────────────────┴───────────────────────┘
+
+SEEK-Multi significantly outperforms all baselines:
+  • 37% faster than frontier-based exploration
+  • 48% faster than greedy coverage
+  • 52% faster than uncoordinated SEEK agents
+  • 69% faster than random walk
+
+6.4 COORDINATION STRATEGY COMPARISON
+------------------------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 3: Coordination Strategy Comparison (3 agents)                        │
+├───────────┬────────────────┬──────────┬─────────────┬───────────────────────┤
+│ Env.      │ Strategy       │ SPL      │ Overlap     │ Msg/Step              │
+├───────────┼────────────────┼──────────┼─────────────┼───────────────────────┤
+│ Small     │ Centralized    │ 0.82     │ 4.1%        │ 5.2                   │
+│           │ Distributed    │ 0.81     │ 6.3%        │ 2.8                   │
+│           │ None           │ 0.68     │ 24.7%       │ 0.0                   │
+├───────────┼────────────────┼──────────┼─────────────┼───────────────────────┤
+│ Medium    │ Centralized    │ 0.79     │ 5.2%        │ 4.1                   │
+│           │ Distributed    │ 0.78     │ 8.7%        │ 2.3                   │
+│           │ None           │ 0.61     │ 31.4%       │ 0.0                   │
+├───────────┼────────────────┼──────────┼─────────────┼───────────────────────┤
+│ Large     │ Centralized    │ 0.74     │ 6.8%        │ 3.8                   │
+│           │ Distributed    │ 0.73     │ 11.2%       │ 2.1                   │
+│           │ None           │ 0.54     │ 38.6%       │ 0.0                   │
+└───────────┴────────────────┴──────────┴─────────────┴───────────────────────┘
+
+Key findings:
+  • Both coordinated strategies significantly outperform uncoordinated search
+  • Centralized achieves slightly better SPL due to global optimization
+  • Distributed uses fewer messages and provides comparable performance
+  • Coordination reduces redundant search by 4-5×
+
+6.5 BELIEF FUSION ANALYSIS
+--------------------------
+
+Belief fusion strategies compared:
+  • Consensus fusion: Continuous sharing with weighted averaging
+  • Periodic sync: Full synchronization every 10 steps
+  • No fusion: Agents maintain independent beliefs
+
+Key findings:
+  • Consensus-based fusion reduces entropy 35% faster than periodic sync
+  • Consensus reduces entropy 60% faster than no fusion
+  • With consensus fusion, average KL divergence drops below 0.1 within 20 steps
+
+6.6 ROBUSTNESS TO COMMUNICATION FAILURES
+----------------------------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 4: Performance Under Communication Failures (3 agents, medium env.)   │
+├─────────────────┬───────────────────┬───────────────────┬───────────────────┤
+│ Drop Rate       │ Centralized       │ Distributed       │ Delta             │
+├─────────────────┼───────────────────┼───────────────────┼───────────────────┤
+│ 0%              │ 0.79              │ 0.78              │ -1.3%             │
+│ 10%             │ 0.76              │ 0.77              │ +1.3%             │
+│ 20%             │ 0.73              │ 0.75              │ +2.7%             │
+│ 30%             │ 0.68              │ 0.73              │ +7.4%             │
+│ 50%             │ 0.64              │ 0.71              │ +10.9%            │
+│ 70%             │ 0.55              │ 0.66              │ +20.0%            │
+└─────────────────┴───────────────────┴───────────────────┴───────────────────┘
+
+Key findings:
+  • SEEK-Multi degrades gracefully under message loss
+  • Distributed strategy is significantly more robust than centralized
+  • At 50% message loss, distributed maintains 91% vs 81% for centralized
+  • At 70% message loss, gap widens to 85% vs 70%
+
+6.7 COMMUNICATION RANGE EFFECTS
+-------------------------------
+
+  • Full connectivity (50m+): SPL = 0.75
+  • 30m range (partial): SPL = 0.71 (95% of full)
+  • 20m range: SPL = 0.67 (89% of full)
+  • 10m range (minimal): SPL = 0.59 (79% of full)
+
+SEEK-Multi provides significant benefits even with limited communication range.
+
+6.8 ABLATION STUDIES
+--------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 5: Ablation Study (3 agents, medium environment)                      │
+├─────────────────────────────────────┬──────────┬────────────────────────────┤
+│ Configuration                       │ SPL      │ ΔSPL                       │
+├─────────────────────────────────────┼──────────┼────────────────────────────┤
+│ Full SEEK-Multi                     │ 0.78     │ ---                        │
+├─────────────────────────────────────┼──────────┼────────────────────────────┤
+│ w/o Semantic priors (RSN)           │ 0.65     │ -16.7%                     │
+│ w/o Belief fusion                   │ 0.71     │ -9.0%                      │
+│ w/o Task coordination               │ 0.68     │ -12.8%                     │
+│ w/o Intention sharing               │ 0.72     │ -7.7%                      │
+│ w/o DSG sharing                     │ 0.74     │ -5.1%                      │
+└─────────────────────────────────────┴──────────┴────────────────────────────┘
+
+Component importance (in order):
+  1. Semantic priors (RSN) provide the largest benefit
+  2. Task coordination is crucial for avoiding redundant search
+  3. Belief fusion enables faster convergence
+  4. Intention sharing prevents immediate conflicts
+  5. DSG sharing provides modest improvement
+
+6.9 ENVIRONMENT COMPLEXITY ANALYSIS
+-----------------------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE 6: Performance Across Environment Sizes (3 agents)                    │
+├─────────────────┬───────────┬──────────┬──────────┬─────────┬───────────────┤
+│ Environment     │ Rooms     │ SR       │ SPL      │ Steps   │ Speedup       │
+├─────────────────┼───────────┼──────────┼──────────┼─────────┼───────────────┤
+│ Small Office    │ 12        │ 98%      │ 0.82     │ 28      │ 2.71×         │
+│ Medium Building │ 24        │ 97%      │ 0.78     │ 49      │ 2.59×         │
+│ Large Facility  │ 48        │ 94%      │ 0.73     │ 87      │ 2.48×         │
+└─────────────────┴───────────┴──────────┴──────────┴─────────┴───────────────┘
+
+SEEK-Multi maintains strong performance across environment sizes, with speedup 
+remaining above 2.4× even for 48-room facilities.
+
+
+================================================================================
+                              7. DISCUSSION
+================================================================================
+
+7.1 SCALABILITY CONSIDERATIONS
+------------------------------
+
+Communication Overhead:
+Message volume grows with O(N²) for full connectivity. For teams larger than 
+6-8 agents, potential solutions include:
+  • Hierarchical communication with local leaders
+  • Sparse communication graphs limited to k-nearest neighbors
+  • Attention-based prioritization using learned mechanisms
+
+Coordination Complexity:
+Task allocation becomes combinatorially harder with more agents. Alternative 
+approaches for very large teams include:
+  • Spatial decomposition: Partition environment and assign teams to regions
+  • Hierarchical task allocation: Two-level with region then room assignment
+  • Learning-based coordination: Multi-agent reinforcement learning
+
+Diminishing Returns:
+For fixed environment size, adding agents eventually provides no benefit. In our 
+24-room medium environment, diminishing returns appear beyond 4-5 agents. Larger 
+environments can benefit from larger teams.
+
+7.2 HETEROGENEOUS TEAMS
+-----------------------
+
+Agent capabilities are modeled through:
+  • Sensor parameters: Detection range, accuracy, field of view
+  • Mobility parameters: Speed, traversability constraints
+  • Communication parameters: Range, bandwidth
+
+Tasks are preferentially assigned to capable agents through modified bidding:
+
+                    Priority(v) · Capabilityᵢ(v)
+    Bidᵢ(v) = ──────────────────────────────────── · LoadFactorᵢ
+                          Costᵢ(v)
+
+Mixed Teams:
+A 2-ground + 1-drone team achieved 15% better SPL than a 3-ground team in large 
+facility environment, demonstrating the value of heterogeneity.
+
+7.3 DEPLOYMENT CONSIDERATIONS
+-----------------------------
+
+Initialization:
+  • Pre-loading from a common map server
+  • Incremental sharing during synchronization phase
+  • Graceful handling of partial initialization
+
+Real-Time Performance:
+  • Belief updates: O(M) per observation
+  • Task allocation: O(M log M) per round
+  • Path planning: O(M²) using Dijkstra's algorithm
+  • All components run in real-time with <50ms per step
+
+7.4 LIMITATIONS AND FUTURE WORK
+-------------------------------
+
+Current Limitations:
+  • Semantic priors trained on common object-room relationships
+  • Communication model assumes reliable delivery within range
+  • Static environments assumed
+  • Simulation-based evaluation only
+
+Future Directions:
+  • Real-world deployment on physical robot teams
+  • Learned communication strategies
+  • Dynamic environments with moving objects
+  • Hierarchical coordination for 10+ agents
+  • Human-robot teaming
+  • Active learning for updating semantic priors
+
+
+================================================================================
+                              8. CONCLUSION
+================================================================================
+
+We have presented SEEK-Multi, a comprehensive framework for collaborative 
+multi-agent object-goal navigation using distributed semantic reasoning. By 
+extending the SEEK architecture with distributed belief fusion, collaborative 
+planning, and efficient communication protocols, SEEK-Multi enables teams of 
+robots to efficiently search for target objects in complex environments.
+
+KEY TECHNICAL CONTRIBUTIONS:
+  • A distributed belief fusion algorithm based on consensus protocols with 
+    provable convergence guarantees
+  • An auction-based task allocation mechanism that incorporates semantic priors 
+    for improved efficiency
+  • A communication protocol that balances information sharing with bandwidth 
+    constraints
+  • Support for both centralized and decentralized coordination modes
+
+EXPERIMENTAL RESULTS DEMONSTRATE:
+  • Near-linear speedup with up to 4 agents (3.1× speedup with 4 agents)
+  • High success rates maintained across configurations (94-97%)
+  • Graceful degradation under communication failures (distributed mode 
+    maintains 91% of baseline SPL at 50% message loss)
+  • Significant improvement over uncoordinated and non-semantic baselines 
+    (37-69% faster)
+  • Consistent performance across environment sizes and configurations
+
+The distributed coordination strategy provides robustness to communication 
+failures while achieving performance comparable to centralized approaches. 
+Ablation studies confirm the importance of each component, with semantic priors 
+(RSN) providing the largest individual contribution.
+
+SEEK-Multi addresses a practical need for efficient multi-robot inspection in 
+time-sensitive applications. The framework's modularity and support for 
+heterogeneous teams make it suitable for diverse deployment scenarios, from 
+industrial inspection to emergency response.
+
+We believe SEEK-Multi represents a significant step toward practical multi-robot 
+semantic inspection systems that can operate efficiently in complex, real-world 
+environments.
+
+
+================================================================================
+                               REFERENCES
+================================================================================
+
+[1]  Tan, C., et al. "Automatic inspection systems for industrial applications." 
+     Advanced Engineering Informatics, 2021.
+
+[2]  Bouman, A., et al. "Autonomous spot: Long-range autonomous exploration of 
+     extreme environments with legged locomotion." ICRA, 2020.
+
+[3]  Queralta, J. P., et al. "Collaborative multi-robot search and rescue: 
+     Planning, coordination, perception, and active vision." IEEE Access, 2020.
+
+[4]  Robin, C., and Lacroix, S. "Multi-robot target detection and tracking: 
+     taxonomy and survey." Autonomous Robots, 2016.
+
+[5]  Rizk, Y., et al. "Cooperative heterogeneous multi-robot systems: A survey." 
+     ACM Computing Surveys, 2019.
+
+[6]  Jordan, M. I., and Mitchell, T. M. "Machine learning: Trends, perspectives, 
+     and prospects." Science, 2018.
+
+[7]  Burgard, W., et al. "Coordinated multi-robot exploration." IEEE 
+     Transactions on Robotics, 2005.
+
+[8]  Yamauchi, B. "A frontier-based approach for autonomous exploration." CIRA, 
+     1997.
+
+[9]  Choset, H. "Coverage for robotics – A survey of recent results." Annals of 
+     Mathematics and Artificial Intelligence, 2001.
+
+[10] Galceran, E., and Carreras, M. "A survey on coverage path planning for 
+     robotics." Robotics and Autonomous Systems, 2013.
+
+[11] Murphy, R. R. "Human-robot interaction in rescue robotics." IEEE 
+     Transactions on Systems, Man, and Cybernetics, 2004.
+
+[12] Kitano, H., et al. "RoboCup rescue: Search and rescue in large-scale 
+     disasters as a domain for autonomous agents research." IROS, 1999.
+
+[13] Gerkey, B. P., and Mataric, M. J. "A formal analysis and taxonomy of task 
+     allocation in multi-robot systems." International Journal of Robotics 
+     Research, 2004.
+
+[14] Olfati-Saber, R., et al. "Consensus and cooperation in networked 
+     multi-agent systems." Proceedings of the IEEE, 2007.
+
+[15] Cortés, J., et al. "Distributed coordination and control of multi-agent 
+     systems: a geometric perspective." Cambridge University Press, 2017.
+
+[16] Dias, M. B., et al. "Market-based multirobot coordination: A survey and 
+     analysis." Proceedings of the IEEE, 2006.
+
+[17] Zlot, R., et al. "An auction-based approach to complex task allocation for 
+     multirobot teams." 2006.
+
+[18] Foerster, J., et al. "Learning to communicate with deep multi-agent 
+     reinforcement learning." NeurIPS, 2016.
+
+[19] Lowe, R., et al. "Multi-agent actor-critic for mixed cooperative-
+     competitive environments." NeurIPS, 2017.
+
+[20] Parker, L. E. "Multiple mobile robot systems." Springer Handbook of 
+     Robotics, 2016.
+
+[21] Yan, Z., et al. "A survey and analysis of multi-robot coordination." 
+     International Journal of Advanced Robotic Systems, 2013.
+
+[22] Simmons, R., et al. "Coordination for multi-robot exploration and mapping." 
+     AAAI, 2000.
+
+[23] Placed, J. A., et al. "Semantic exploration with adaptive information 
+     gathering." ICRA, 2023.
+
+[24] Hollinger, G. A., and Singh, S. "Multirobot coordination with periodic 
+     connectivity." IEEE Transactions on Robotics, 2012.
+
+[25] Chung, T. H., et al. "Search and pursuit-evasion in mobile robotics." 
+     Autonomous Robots, 2011.
+
+[26] Vidal, R., et al. "Probabilistic pursuit-evasion games: theory, 
+     implementation, and experimental evaluation." IEEE TRO, 2002.
+
+[27] Bourgault, F., et al. "Optimal search for a lost target in a Bayesian 
+     world." Recent Developments in Cooperative Control and Optimization, 2006.
+
+[28] Lanillos, P., et al. "Multi-robot cooperative object localization." ICRA, 
+     2012.
+
+[29] Stern, R., et al. "Multi-agent pathfinding: Definitions, variants, and 
+     benchmarks." SOCS, 2019.
+
+[30] Latombe, J.-C. Robot motion planning. Springer, 2012.
+
+[31] Sharon, G., et al. "Conflict-based search for optimal multi-agent 
+     pathfinding." Artificial Intelligence, 2015.
+
+[32] Wagner, G., and Choset, H. "Subdimensional expansion for multirobot path 
+     planning." Artificial Intelligence, 2015.
+
+[33] Van Den Berg, J., et al. "Reciprocal n-body collision avoidance." Robotics 
+     Research, 2011.
+
+[34] Berg, J. V. D., et al. "Reciprocal velocity obstacles for real-time 
+     multi-agent navigation." ICRA, 2008.
+
+[35] Cap, M., et al. "Prioritized planning algorithms for trajectory 
+     coordination of multiple mobile robots." IEEE TAS, 2015.
+
+[36] Van Den Berg, J., et al. "Prioritized planning in robotics." Algorithmic 
+     Foundation of Robotics, 2005.
+
+[37] Tanner, H. G., et al. "Flocking in fixed and switching networks." IEEE 
+     TAC, 2007.
+
+[38] Luis, C. E., et al. "Online trajectory generation with distributed model 
+     predictive control for multi-robot motion planning." IEEE RAL, 2020.
+
+[39] Sartoretti, G., et al. "PRIMAL: Pathfinding via reinforcement and imitation 
+     multi-agent learning." IEEE RAL, 2019.
+
+[40] Cunningham, A., et al. "DDF-SAM: Fully distributed SLAM using constrained 
+     factor graphs." IROS, 2013.
+
+[41] Bailey, T., et al. "Decentralised cooperative localisation for 
+     heterogeneous teams of mobile robots." ICRA, 2012.
+
+[42] Ren, W., and Beard, R. W. "Information consensus in multivehicle 
+     cooperative control." IEEE Control Systems Magazine, 2007.
+
+[43] Cunningham, A., et al. "Large-scale distributed multi-robot SLAM." ICRA, 
+     2012.
+
+[44] Choudhary, S., et al. "Distributed mapping with privacy and communication 
+     constraints." International Journal of Robotics Research, 2017.
+
+[45] Julier, S., and Uhlmann, J. "General decentralized data fusion with 
+     covariance intersection." Handbook of Multisensor Data Fusion, 2001.
+
+[46] Julier, S. J., and Uhlmann, J. K. "A non-divergent estimation algorithm in 
+     the presence of unknown correlations." ACC, 1997.
+
+[47] Chong, C.-Y., et al. "Architectures and algorithms for track association 
+     and fusion." IEEE AES Magazine, 1990.
+
+[48] Chen, B., et al. "Not all who wander are lost: Semantic navigation with 
+     large language models." CoRL, 2023.
+
+[49] Shah, D., et al. "Navigation with large language models: Semantic guessing 
+     games." RSS, 2023.
+
+[50] Yokoyama, N., et al. "VLFM: Vision-language frontier maps for zero-shot 
+     semantic navigation." ICRA, 2024.
+
+[51] Gadre, S. Y., et al. "COWS on pasture: Baselines and benchmarks for 
+     language-driven zero-shot object navigation." CVPR, 2023.
+
+[52] Ginting, M. F., et al. "SEEK: Semantic reasoning for object goal navigation 
+     in real world inspection tasks." ICRA, 2024.
+
+[53] Rosinol, A., et al. "Kimera: An open-source library for real-time 
+     metric-semantic localization and mapping." ICRA, 2020.
+
+[54] Hughes, N., et al. "Hydra: A real-time spatial perception system for 3D 
+     scene graph construction and optimization." RSS, 2022.
+
+[55] Armeni, I., et al. "3D scene graph: A structure for unified semantics, 3D 
+     space, and camera." ICCV, 2019.
+
+[56] Rosinol, A., et al. "Kimera: From SLAM to spatial perception with 3D 
+     dynamic scene graphs." International Journal of Robotics Research, 2021.
+
+[57] Chang, Y., et al. "Hydra-Multi: Collaborative online construction of 3D 
+     scene graphs." RSS, 2023.
+
+[58] Tian, Y., et al. "Kimera-Multi: Robust, distributed, dense metric-semantic 
+     SLAM for multi-robot systems." IEEE TRO, 2022.
+
+[59] Sukhbaatar, S., et al. "Learning multiagent communication with 
+     backpropagation." NeurIPS, 2016.
+
+[60] Armeni, I., et al. "Joint 2D-3D-semantic data for indoor scene 
+     understanding." arXiv:1702.01105, 2016.
+
+[61] Bertsekas, D. P. "Auction algorithms for network flow problems: A tutorial 
+     introduction." Computational Optimization and Applications, 1992.
+
+
+================================================================================
+                               APPENDIX A
+                           ALGORITHM DETAILS
+================================================================================
+
+A.1 TASK ALLOCATION ALGORITHM
+-----------------------------
+
+ALGORITHM: Auction-Based Task Allocation
+
+Input: Tasks T, Agents R, DSG G, Belief P(yG)
+Output: Allocation A: T → R
+
+1.  Initialize prices p_t = Priority(t) for all t ∈ T
+2.  Initialize allocation A = ∅
+3.  Initialize load Lᵢ = 0 for all rᵢ ∈ R
+4.  WHILE unassigned tasks exist AND iterations < max_iter:
+5.      FOR each agent rᵢ:
+6.          LoadFactorᵢ ← exp(-β · Lᵢ)
+7.          FOR each unassigned task t:
+8.              Costᵢ(t) ← shortest path cost from xᵢ to t
+9.              bᵢₜ ← (pₜ / (Costᵢ(t) + ε)) · LoadFactorᵢ
+10.         END FOR
+11.         tᵢ* ← argmax_t bᵢₜ
+12.         Submit bid (i, tᵢ*, bᵢₜᵢ*)
+13.     END FOR
+14.     FOR each task t:
+15.         Bidders(t) ← {i : tᵢ* = t}
+16.         IF |Bidders(t)| = 1:
+17.             i* ← single bidder
+18.             A(t) ← rᵢ*
+19.             Lᵢ* ← Lᵢ* + 1
+20.         ELSE IF |Bidders(t)| > 1:
+21.             i* ← argmax_{i ∈ Bidders(t)} bᵢₜ
+22.             A(t) ← rᵢ*
+23.             Lᵢ* ← Lᵢ* + 1
+24.             Increase price: pₜ ← (1 + δ) · pₜ
+25.         END IF
+26.     END FOR
+27. END WHILE
+28. RETURN A
+
+Properties:
+  • Convergence in O(M log M) iterations for M tasks
+  • ε-competitive with optimal allocation
+  • Distributed execution with O(N) messages per round
+  • Load balancing through exponential penalty
+
+A.2 DISTRIBUTED CONSENSUS ALGORITHM
+-----------------------------------
+
+ALGORITHM: Distributed Belief Consensus
+
+Input: Local belief Pᵢ, Confidence cᵢ, Neighbors Nᵢ
+Output: Updated belief Pᵢ', Updated confidence cᵢ'
+
+1.  Broadcast ⟨Pᵢ, cᵢ⟩ to all j ∈ Nᵢ
+2.  Receive {(Pⱼ, cⱼ) : j ∈ Nᵢ}
+3.  W ← cᵢ + Σⱼ∈Nᵢ cⱼ
+4.  Pᵢ' ← (cᵢ · Pᵢ + Σⱼ∈Nᵢ cⱼ · Pⱼ) / W
+5.  cᵢ' ← √(cᵢ² + Σⱼ∈Nᵢ cⱼ²)
+6.  Normalize: Pᵢ' ← Pᵢ' / Σᵥ Pᵢ'(v)
+7.  RETURN Pᵢ', cᵢ'
+
+
+================================================================================
+                               APPENDIX B
+                     ADDITIONAL EXPERIMENTAL RESULTS
+================================================================================
+
+B.1 DETAILED SCALING ANALYSIS
+-----------------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TABLE: Detailed Scaling Results with 95% Confidence Intervals               │
+├──────────┬────────────────┬─────────────┬──────────────┬────────────────────┤
+│ N        │ Avg. Steps     │ Overlap     │ Msg/Agent    │ Efficiency         │
+├──────────┼────────────────┼─────────────┼──────────────┼────────────────────┤
+│ 1        │ 127 ± 12       │ ---         │ ---          │ 100%               │
+│ 2        │ 68 ± 8         │ 6.2%        │ 4.3          │ 93.4%              │
+│ 3        │ 49 ± 6         │ 8.7%        │ 3.8          │ 86.4%              │
+│ 4        │ 41 ± 5         │ 11.3%       │ 3.5          │ 77.4%              │
+│ 5        │ 36 ± 5         │ 14.8%       │ 3.2          │ 70.6%              │
+│ 6        │ 33 ± 4         │ 18.2%       │ 3.0          │ 64.1%              │
+└──────────┴────────────────┴─────────────┴──────────────┴────────────────────┘
+
+Efficiency = T₁ / (N × Tₙ)
+
+B.2 SENSITIVITY ANALYSIS
+------------------------
+
+Detection Probability (varying p_d from 0.7 to 0.99):
+  • p_d = 0.70: SPL = 0.71, Steps = 58
+  • p_d = 0.80: SPL = 0.75, Steps = 52
+  • p_d = 0.90: SPL = 0.78, Steps = 49
+  • p_d = 0.99: SPL = 0.81, Steps = 46
+
+RSN Accuracy (with degraded priors):
+  • Perfect RSN:    SPL = 0.78
+  • 10% noise:      SPL = 0.75
+  • 20% noise:      SPL = 0.71
+  • 50% noise:      SPL = 0.64
+  • Random priors:  SPL = 0.55
+
+Communication Latency (varying from 0 to 5 steps):
+  • 0 steps: SPL = 0.78
+  • 1 step:  SPL = 0.77
+  • 2 steps: SPL = 0.75
+  • 5 steps: SPL = 0.71
+
+
+================================================================================
+                               APPENDIX C
+                      SIMULATION ENVIRONMENT DETAILS
+================================================================================
+
+C.1 ENVIRONMENT LAYOUTS
+-----------------------
+
+Small Office (12 rooms):
+  • Entrance (1), Lobby (1), Offices (2)
+  • Conference room (1), Kitchen (1), Break room (1)
+  • Hallways (2), Restroom (1), Storage (1), Server room (1)
+  • Total area: ~300 m²
+  • Average room size: 25 m²
+
+Medium Building (24 rooms):
+  • Ground floor: Entrance, lobby, reception, 2 meeting rooms, kitchen, 
+    2 restrooms, 4 offices
+  • Upper floor: 6 offices, 2 labs, conference room, break room, storage, 
+    server room
+  • Total area: ~800 m²
+  • Average room size: 33 m²
+
+Large Facility (48 rooms):
+  • Admin wing: Reception, 8 offices, 2 conference rooms, break room
+  • Operations wing: Control room, 4 monitoring stations, equipment room
+  • Warehouse: 6 storage areas, loading dock, maintenance shop
+  • Labs: 4 research labs, 2 clean rooms, equipment storage
+  • Common: Cafeteria, 4 restrooms, 4 hallways, 2 stairwells, utility rooms
+  • Total area: ~2000 m²
+  • Average room size: 42 m²
+
+C.2 OBJECT-ROOM PROBABILITIES FROM RSN
+--------------------------------------
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Example RSN Probabilities                                                   │
+├─────────────────────────┬────────────┬────────────┬─────────────────────────┤
+│ Object                  │ Kitchen    │ Office     │ Hallway                 │
+├─────────────────────────┼────────────┼────────────┼─────────────────────────┤
+│ Fire extinguisher       │ 0.35       │ 0.15       │ 0.30                    │
+│ First aid kit           │ 0.25       │ 0.10       │ 0.20                    │
+│ AED                     │ 0.15       │ 0.05       │ 0.40                    │
+│ Emergency exit sign     │ 0.10       │ 0.05       │ 0.50                    │
+└─────────────────────────┴────────────┴────────────┴─────────────────────────┘
+
+C.3 SENSOR MODEL DETAILS
+------------------------
+
+  • Field of view: 90° horizontal, 60° vertical
+  • Detection range: 5m nominal, 10m for thorough search
+  • True positive rate: 0.9 (varies with distance)
+  • False positive rate: 0.05 per observation
+  • Position noise: Gaussian with σ = 0.5m
+  • Classification accuracy: 0.95 for target object class
+
+Detection probability decreases with distance:
+
+    p_det(d) = p_tp · exp(-(d - d_opt)² / 2σ_d²)
+
+where d_opt = 3m is the optimal detection distance.
+
+
+================================================================================
+                             END OF DOCUMENT
+================================================================================
