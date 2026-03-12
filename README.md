@@ -300,7 +300,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Built upon the SEEK framework for single-agent semantic reasoning
 - Inspired by consensus protocols and multi-robot coordination literature
 - Thanks to the robotics and AI community for invaluable feedback
-
----
-
-**Questions?** Open an issue or reach out at [your-email@example.com]
